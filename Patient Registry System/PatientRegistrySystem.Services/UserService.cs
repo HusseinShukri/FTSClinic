@@ -1,71 +1,59 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using PatientRegistrySystem.DB.Contexts;
 using PatientRegistrySystem.DB.Entities;
 using PatientRegistrySystem.DB.Repos;
 using PatientRegistrySystem.Domain.Dto;
-using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PatientRegistrySystem.Services
 {
-    public class UserService : Controller, IUserService
+    public class UserService : IUserService
     {
-        public IMapper Mapper { get; }
-        public IGenericRepository<User> userRepository { get; }
+        private readonly IMapper Mapper;
+        private readonly IUserRepository userRepository;
 
-        public UserService(IMapper mapper, IGenericRepository<User> UserGenericRepository)
+        public UserService(IMapper mapper, IUserRepository userRepository)
         {
-            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            userRepository = UserGenericRepository ?? throw new ArgumentNullException(nameof(UserGenericRepository));
+            Mapper = mapper;
+            this.userRepository = userRepository;
         }
         //CreateUser/UpdateUser/DeleteUser/GetUser/GetAllUsers
 
-        public IActionResult GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            var usersFromRepo = userRepository.GetAll();
-            var DtoUsers = Mapper.Map<UserDto[]>(usersFromRepo);
-            if (!usersFromRepo.Any()) { return NotFound(); }
-            return Ok(DtoUsers);
+            var userFromDB = await userRepository.GetAllAsync();
+            if (!userFromDB.Any()) { return null; }
+            return userFromDB;
         }
 
-        public IActionResult GetUser(int id)
+        public async Task<User> GetUser(int id)
         {
-            var usersFromRepo = userRepository.GetId(id);
-            if (usersFromRepo == null) { return NotFound(); }
-            var DtoUsers = Mapper.Map<UserDto>(usersFromRepo);
-            return Ok(DtoUsers);
+            var userFromDB = await userRepository.GetIdAsync(id);
+            if (userFromDB == null) { return null; }
+            return userFromDB;
         }
 
-        public IActionResult UpdateUser(int id, User user)
+        public async Task<bool> UpdateUser(int userId,UserDto updatedUser)
         {
-            if (user == null) { return NotFound(); }
-            User usersFromRepo;
-            using (PatientContext context = new PatientContext())
-            {
-                usersFromRepo = context.User.Find(id);
-            }
-            //var DtoUsers = Mapper.Map<UserDto>(usersFromRepo);
-            if (usersFromRepo == null) { return NotFound(); }
-            userRepository.UpdateEntity(user);
-            userRepository.SaveChanges();
-            return NoContent();
+            var userFromDB = await userRepository.GetIdAsync(userId);
+            if (userFromDB == null) { return false; }
+            Mapper.Map(updatedUser, userFromDB);
+            return await userRepository.UpdateEntity(userFromDB); ;
         }
 
-        public IActionResult CreateUser(UserDto user)
+        public async Task<User> CreateUser(UserDto newUser)
         {
-            if (user == null) { return NotFound(); }
-            var userEntity = Mapper.Map<User>(user);
-            userRepository.CreateEntity(userEntity);
-            return RedirectToAction("GrtUser", "Users", new { @id = userEntity.UserId }); ;
+            if (newUser == null) { return null; }
+            var userEntity = Mapper.Map<User>(newUser);
+            return (await userRepository.CreateEntityAsync(userEntity));
         }
 
-        public IActionResult DeleteUser(User user)
+        public async Task<bool> DeleteUser(int userId)
         {
-            if (user == null) { return NotFound(); }
-            if (this.userRepository.GetId(user.UserId) == null) { return NotFound(); }
-            userRepository.DeleteEntity(user);
-            return NoContent();
+            var UserFromDB = await userRepository.FindEntityAsync(userId);
+            if (UserFromDB == null) { return false; }
+            return await userRepository.DeleteEntityAsync(UserFromDB); 
         }
     }
 }

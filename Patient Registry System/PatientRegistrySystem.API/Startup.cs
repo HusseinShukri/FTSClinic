@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using PatientRegistrySystem.DB.Contexts;
 using PatientRegistrySystem.Services;
 using PatientRegistrySystem.DB.Repos;
-using PatientRegistrySystem.DB.Entities;
 
 namespace PatientRegistrySystem.API
 {
@@ -25,8 +24,9 @@ namespace PatientRegistrySystem.API
         {
             services.AddControllers();
             
-            services.AddScoped<IGenericRepository<User>, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRecordRepository, RecordRepository>();
             
             services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly);
             services.AddDbContext<PatientContext>(options =>

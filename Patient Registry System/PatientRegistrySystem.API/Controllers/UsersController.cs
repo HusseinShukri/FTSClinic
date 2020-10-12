@@ -1,6 +1,6 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PatientRegistrySystem.DB.Entities;
+using PatientRegistrySystem.DB.Filters;
 using PatientRegistrySystem.Domain.Dto;
 using PatientRegistrySystem.Services;
 
@@ -12,38 +12,48 @@ namespace PatientRegistrySystem.API.Controllers
     {
         public UsersController(IUserService userService)
         {
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            UserService = userService;
         }
+        private readonly IUserService UserService;
 
-        public IUserService _userService { get; }
-
-        //CreateUser/UpdateUser/DeleteUser/GetUser/GetAllUsers
         [HttpGet]
-        public IActionResult GetAllUsers()
+        [UsersResultFilterAttribute]
+        public async Task<IActionResult> GetAllUsers()
         {
-            return _userService.GetAllUsers();
-        }
-        [HttpGet("{id:int}")]
-        public IActionResult GrtUser(int id)
-        {
-            return _userService.GetUser(id);
+            var users = await UserService.GetAllUsers();
+            if (users == null) { return NotFound(); } else { return Ok(users); }
         }
 
-        [HttpPatch("{id:int}")]
-        public IActionResult UpdateUser(int id, [FromBody] User user)
+        [HttpGet("{id:int}", Name = "GetUser")]
+        [UserResultFilterAttribute]
+        public async Task<IActionResult> GetUser(int id)
         {
-            return _userService.UpdateUser(id, user);
+            var user = await UserService.GetUser(id);
+            if (user == null) { return NotFound(); } else { return Ok(user); }
+        }
+
+        [HttpPut("{id:int}")]
+        [UserResultFilterAttribute]
+        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserDto user)
+        {
+            if (user == null) { return NotFound(); }
+            if (!await UserService.UpdateUser(id, user)) { return NotFound(); }
+            else { return RedirectToAction("GetUser", "Users", new { @id = id }); }
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserDto user)
+        [UserResultFilterAttribute]
+        public async Task<IActionResult> CreateUser([FromBody] UserDto user)
         {
-            return _userService.CreateUser(user);
+            var createdUser = await UserService.CreateUser(user);
+            if (createdUser == null) { return NotFound(); }
+            else { return CreatedAtRoute("GetUser", new { id = createdUser.UserId }, createdUser); }
         }
-        [HttpDelete]
-        public IActionResult DeleteUser([FromBody]User user)
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            return _userService.DeleteUser(user);
+            if (!await UserService.DeleteUser(id)) { return NotFound(); } else { return NoContent(); }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.Domain.Dto
@@ -11,8 +12,8 @@ namespace PatientRegistrySystem.Domain.Dto
         [Display(Name = "Doctor Name")]
         public string DoctorName { get; set; }
 
-        //[Display(Name = "Presciption")]
-        //public PrescriptionDto Prescription { get; set; }
+        [Display(Name = "Presciption")]
+        public List<PrescriptionDto> Prescription { get; set; } = new List<PrescriptionDto>();
 
         [Display(Name = "From Date")]
         public DateTime StartDate { get; set; }

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace PatientRegistrySystem.DB.Repos
 {
-    public  interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
-        T AddEntity(T entity);
-        T UpdateEntity(T entity);
-        T GetId(int id);
-        IEnumerable<T> GetAll();
-        IEnumerable<T> FindEntity(Expression<Func<T, bool>> predicate);
-        void CreateEntity(T entity);
-        void DeleteEntity(T entity);
-        void SaveChanges();
+        Task<T> CreateEntityAsync(T entity);
+        Task<bool> UpdateEntity(T entity);
+        Task<T> GetIdAsync(int entityId);
+        Task<IEnumerable<T>> GetAllAsync();
+        IEnumerable<T> Findentities(Expression<Func<T, bool>> predicate);
+        Task<T> FindEntityAsync(int entityId);
+        Task<bool> DeleteEntityAsync(T entity);
+        Task<bool> SaveChangesAsync();
     }
 }

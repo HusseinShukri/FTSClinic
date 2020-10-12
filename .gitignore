@@ -360,3 +360,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+Patient Registry System/PatientRegistrySystem.API/obj/Debug/netcoreapp3.1/PatientRegistrySystem.API.MvcApplicationPartsAssemblyInfo.cs
+Patient Registry System/PatientRegistrySystem.API/obj/Debug/netcoreapp3.1/PatientRegistrySystem.API.MvcApplicationPartsAssemblyInfo.cs
