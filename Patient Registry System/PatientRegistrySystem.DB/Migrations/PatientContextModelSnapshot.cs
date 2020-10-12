@@ -240,7 +240,7 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExtrInfo")
@@ -297,6 +297,17 @@ namespace PatientRegistrySystem.DB.Migrations
                             StartDate = new DateTime(2020, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 0,
                             UserID = 2
+                        },
+                        new
+                        {
+                            RecordId = 3,
+                            ApprovedBy = 2,
+                            Case = "we dont know eat",
+                            DoctorId = 1,
+                            ExtrInfo = "Nothing here",
+                            StartDate = new DateTime(2020, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            UserID = 5
                         });
                 });
 
@@ -533,7 +544,8 @@ namespace PatientRegistrySystem.DB.Migrations
 
                     b.HasOne("PatientRegistrySystem.DB.Entities.Prescription", "Prescription")
                         .WithMany("Record")
-                        .HasForeignKey("PrescriptionId");
+                        .HasForeignKey("PrescriptionId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("PatientRegistrySystem.DB.Entities.User", "User")
                         .WithMany("Record")

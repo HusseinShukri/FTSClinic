@@ -10,50 +10,49 @@ namespace PatientRegistrySystem.Services
 {
     public class UserService : IUserService
     {
-        private readonly IMapper Mapper;
-        private readonly IUserRepository userRepository;
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
         public UserService(IMapper mapper, IUserRepository userRepository)
         {
-            Mapper = mapper;
-            this.userRepository = userRepository;
+            _mapper = mapper;
+            _userRepository = userRepository;
         }
-        //CreateUser/UpdateUser/DeleteUser/GetUser/GetAllUsers
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            var userFromDB = await userRepository.GetAllAsync();
+            var userFromDB = await _userRepository.GetAllAsync();
             if (!userFromDB.Any()) { return null; }
             return userFromDB;
         }
 
-        public async Task<User> GetUser(int id)
+        public async Task<User> GetUserAsync(int id)
         {
-            var userFromDB = await userRepository.GetIdAsync(id);
+            var userFromDB = await _userRepository.GetIdAsync(id);
             if (userFromDB == null) { return null; }
             return userFromDB;
         }
 
-        public async Task<bool> UpdateUser(int userId,UserDto updatedUser)
+        public async Task<bool> UpdateUserAsync(int userId, UserDto updatedUser)
         {
-            var userFromDB = await userRepository.GetIdAsync(userId);
+            var userFromDB = await _userRepository.GetIdAsync(userId);
             if (userFromDB == null) { return false; }
-            Mapper.Map(updatedUser, userFromDB);
-            return await userRepository.UpdateEntity(userFromDB); ;
+            _mapper.Map(updatedUser, userFromDB);
+            return await _userRepository.UpdateEntity(userFromDB); ;
         }
 
-        public async Task<User> CreateUser(UserDto newUser)
+        public async Task<User> CreateUserAsync(UserDto newUser)
         {
             if (newUser == null) { return null; }
-            var userEntity = Mapper.Map<User>(newUser);
-            return (await userRepository.CreateEntityAsync(userEntity));
+            var userEntity = _mapper.Map<User>(newUser);
+            return (await _userRepository.CreateEntityAsync(userEntity));
         }
 
-        public async Task<bool> DeleteUser(int userId)
+        public async Task<bool> DeleteUserAsync(int userId)
         {
-            var UserFromDB = await userRepository.FindEntityAsync(userId);
+            var UserFromDB = await _userRepository.FindEntityAsync(userId);
             if (UserFromDB == null) { return false; }
-            return await userRepository.DeleteEntityAsync(UserFromDB); 
+            return await _userRepository.DeleteEntityAsync(UserFromDB);
         }
     }
 }

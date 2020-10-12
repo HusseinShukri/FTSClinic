@@ -7,10 +7,10 @@ namespace PatientRegistrySystem.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetAllUsers();
-        Task<User> GetUser(int id);
-        Task<bool> UpdateUser(int userId, UserDto updatedUser);
-        Task<User> CreateUser(UserDto newUser);
-        Task<bool> DeleteUser(int userId);
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> GetUserAsync(int id);
+        Task<bool> UpdateUserAsync(int userId, UserDto updatedUser);
+        Task<User> CreateUserAsync(UserDto newUser);
+        Task<bool> DeleteUserAsync(int userId);
     }
 }

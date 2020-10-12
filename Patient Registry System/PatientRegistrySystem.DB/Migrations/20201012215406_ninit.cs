@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PatientRegistrySystem.DB.Migrations
 {
-    public partial class init : Migration
+    public partial class ninit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -175,7 +175,7 @@ namespace PatientRegistrySystem.DB.Migrations
                     DoctorId = table.Column<int>(nullable: false),
                     PrescriptionId = table.Column<int>(nullable: true),
                     StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: true),
                     Case = table.Column<string>(maxLength: 500, nullable: false),
                     ExtrInfo = table.Column<string>(maxLength: 500, nullable: true),
                     Status = table.Column<int>(nullable: false),
@@ -199,8 +199,7 @@ namespace PatientRegistrySystem.DB.Migrations
                         name: "FK_Record_Prescription_PrescriptionId",
                         column: x => x.PrescriptionId,
                         principalTable: "Prescription",
-                        principalColumn: "PrescriptionId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "PrescriptionId");
                     table.ForeignKey(
                         name: "FK_Record_User_UserID",
                         column: x => x.UserID,
@@ -296,6 +295,11 @@ namespace PatientRegistrySystem.DB.Migrations
                 table: "Record",
                 columns: new[] { "RecordId", "ApprovedBy", "Case", "DoctorId", "EndDate", "ExtrInfo", "PrescriptionId", "StartDate", "Status", "UserID" },
                 values: new object[] { 2, 1, "Pregnant needs nutritions", 1, new DateTime(2020, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), "Pregnancy Vitamins", 2, new DateTime(2020, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 2 });
+
+            migrationBuilder.InsertData(
+                table: "Record",
+                columns: new[] { "RecordId", "ApprovedBy", "Case", "DoctorId", "EndDate", "ExtrInfo", "PrescriptionId", "StartDate", "Status", "UserID" },
+                values: new object[] { 3, 2, "we dont know eat", 1, null, "Nothing here", null, new DateTime(2020, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Doctor_UserId",

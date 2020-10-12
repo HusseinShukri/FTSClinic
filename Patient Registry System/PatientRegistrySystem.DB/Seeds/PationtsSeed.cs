@@ -79,7 +79,7 @@ namespace PatientRegistrySystem.DB.Seeds
                 new UserRole { RoleId = 2, UserId = 3 },
                 new UserRole { RoleId = 3, UserId = 4 },
                 new UserRole { RoleId = 4, UserId = 5 },
-                new UserRole { RoleId = 1, UserId = 5 }//something wrong here 
+                new UserRole { RoleId = 1, UserId = 5 }
                 );
             #endregion
             #region Doctor
@@ -151,6 +151,19 @@ namespace PatientRegistrySystem.DB.Seeds
                     ExtrInfo = "Pregnancy Vitamins",
                     Status = 0,
                     ApprovedBy = 1
+                },
+                new Record
+                {
+                    RecordId = 3,
+                    UserID = 5,
+                    PrescriptionId = null,
+                    DoctorId = 1,
+                    StartDate = new DateTime(2020, 10, 13),
+                    EndDate = null,
+                    Case = "we dont know eat",
+                    ExtrInfo = "Nothing here",
+                    Status = 1,
+                    ApprovedBy = 2
                 });
             #endregion
         }

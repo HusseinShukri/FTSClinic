@@ -12,15 +12,15 @@ namespace PatientRegistrySystem.API.Controllers
     {
         public UsersController(IUserService userService)
         {
-            UserService = userService;
+            _userService = userService;
         }
-        private readonly IUserService UserService;
+        private readonly IUserService _userService;
 
         [HttpGet]
         [UsersResultFilterAttribute]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await UserService.GetAllUsers();
+            var users = await _userService.GetAllUsersAsync();
             if (users == null) { return NotFound(); } else { return Ok(users); }
         }
 
@@ -28,7 +28,7 @@ namespace PatientRegistrySystem.API.Controllers
         [UserResultFilterAttribute]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await UserService.GetUser(id);
+            var user = await _userService.GetUserAsync(id);
             if (user == null) { return NotFound(); } else { return Ok(user); }
         }
 
@@ -37,7 +37,7 @@ namespace PatientRegistrySystem.API.Controllers
         public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserDto user)
         {
             if (user == null) { return NotFound(); }
-            if (!await UserService.UpdateUser(id, user)) { return NotFound(); }
+            if (!await _userService.UpdateUserAsync(id, user)) { return NotFound(); }
             else { return RedirectToAction("GetUser", "Users", new { @id = id }); }
         }
 
@@ -45,7 +45,7 @@ namespace PatientRegistrySystem.API.Controllers
         [UserResultFilterAttribute]
         public async Task<IActionResult> CreateUser([FromBody] UserDto user)
         {
-            var createdUser = await UserService.CreateUser(user);
+            var createdUser = await _userService.CreateUserAsync(user);
             if (createdUser == null) { return NotFound(); }
             else { return CreatedAtRoute("GetUser", new { id = createdUser.UserId }, createdUser); }
         }
@@ -53,7 +53,7 @@ namespace PatientRegistrySystem.API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (!await UserService.DeleteUser(id)) { return NotFound(); } else { return NoContent(); }
+            if (!await _userService.DeleteUserAsync(id)) { return NotFound(); } else { return NoContent(); }
         }
     }
 }

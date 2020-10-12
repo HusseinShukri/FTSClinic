@@ -30,14 +30,19 @@ namespace PatientRegistrySystem.DB.Contexts
                .WithMany(u => u.Employee).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Doctor>()
-                        .HasMany(a => a.Record)
-                        .WithOne(u => u.Doctor).OnDelete(DeleteBehavior.NoAction);
+                .HasMany(a => a.Record)
+                .WithOne(u => u.Doctor).OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Prescription>()
+                .HasMany(a => a.Record)
+                .WithOne(p=>p.Prescription).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()
-                .HasMany(e => e.Employee).WithOne(e => e.User).OnDelete(DeleteBehavior.NoAction);
+                .HasMany(e => e.Employee)
+                .WithOne(e => e.User).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()
-                        .HasMany(e => e.Record).WithOne(e => e.User).OnDelete(DeleteBehavior.NoAction);
+                .HasMany(e => e.Record).WithOne(e => e.User).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserRole>().HasOne(u => u.User).WithMany(ur => ur.UserRole).HasForeignKey(u => u.UserId);
