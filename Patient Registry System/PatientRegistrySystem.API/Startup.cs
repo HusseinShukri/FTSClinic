@@ -23,11 +23,15 @@ namespace PatientRegistrySystem.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRecordRepository, RecordRepository>();
-            
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
             services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly);
             services.AddDbContext<PatientContext>(options =>
             {

@@ -17,7 +17,6 @@ namespace PatientRegistrySystem.API.Controllers
         private readonly IUserService _userService;
 
         [HttpGet]
-        [UsersResultFilterAttribute]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
@@ -25,7 +24,6 @@ namespace PatientRegistrySystem.API.Controllers
         }
 
         [HttpGet("{id:int}", Name = "GetUser")]
-        [UserResultFilterAttribute]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _userService.GetUserAsync(id);
@@ -33,12 +31,11 @@ namespace PatientRegistrySystem.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        [UserResultFilterAttribute]
         public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserDto user)
         {
             if (user == null) { return NotFound(); }
             if (!await _userService.UpdateUserAsync(id, user)) { return NotFound(); }
-            else { return RedirectToAction("GetUser", "Users", new { @id = id }); }
+            else { return RedirectToAction("GetUser", "Users", new { id }); }
         }
 
         [HttpPost]

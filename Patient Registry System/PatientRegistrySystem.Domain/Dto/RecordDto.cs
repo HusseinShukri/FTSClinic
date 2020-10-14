@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PatientRegistrySystem.Domain.Dto.DtosForRecord;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.Domain.Dto
@@ -9,7 +10,7 @@ namespace PatientRegistrySystem.Domain.Dto
         public string PatinetName { get; set; }
 
         [Display(Name = "Doctor")]
-        public DoctorDto DoctorName { get; set; }
+        public DoctorForRecordDto DoctorName { get; set; }
 
         [Display(Name = "Presciption")]
         public PrescriptionDto Prescription { get; set; }
@@ -30,6 +31,6 @@ namespace PatientRegistrySystem.Domain.Dto
         public int Status { get; set; }
 
         [Display(Name = "Approved By Emolyee")]
-        public EmployeeDto ApprovedBy { get; set; }
+        public EmployeeForRecordDto ApprovedBy { get; set; }
     }
 }

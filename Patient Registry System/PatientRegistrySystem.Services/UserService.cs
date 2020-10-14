@@ -19,18 +19,18 @@ namespace PatientRegistrySystem.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var userFromDB = await _userRepository.GetAllAsync();
             if (!userFromDB.Any()) { return null; }
-            return userFromDB;
+            return _mapper.Map<UserDto[]>(userFromDB);
         }
 
-        public async Task<User> GetUserAsync(int id)
+        public async Task<UserDto> GetUserAsync(int id)
         {
             var userFromDB = await _userRepository.GetIdAsync(id);
             if (userFromDB == null) { return null; }
-            return userFromDB;
+            return _mapper.Map<UserDto>(userFromDB);
         }
 
         public async Task<bool> UpdateUserAsync(int userId, UserDto updatedUser)
@@ -38,14 +38,14 @@ namespace PatientRegistrySystem.Services
             var userFromDB = await _userRepository.GetIdAsync(userId);
             if (userFromDB == null) { return false; }
             _mapper.Map(updatedUser, userFromDB);
-            return await _userRepository.UpdateEntity(userFromDB); ;
+            return await _userRepository.UpdateEntity(userFromDB);
         }
 
-        public async Task<User> CreateUserAsync(UserDto newUser)
+        public async Task<CreatedUserDto> CreateUserAsync(UserDto newUser)
         {
             if (newUser == null) { return null; }
             var userEntity = _mapper.Map<User>(newUser);
-            return (await _userRepository.CreateEntityAsync(userEntity));
+            return _mapper.Map<CreatedUserDto>((await _userRepository.CreateEntityAsync(userEntity)));
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
