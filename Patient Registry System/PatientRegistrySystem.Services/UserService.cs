@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using PatientRegistrySystem.DB.Entities;
 using PatientRegistrySystem.DB.Repos;
 using PatientRegistrySystem.Domain.Dto;
 using System.Collections.Generic;
@@ -21,38 +20,37 @@ namespace PatientRegistrySystem.Services
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            var userFromDB = await _userRepository.GetAllAsync();
+            var userFromDB = await _userRepository.GetAllShallowAsync();
             if (!userFromDB.Any()) { return null; }
             return _mapper.Map<UserDto[]>(userFromDB);
         }
 
         public async Task<UserDto> GetUserAsync(int id)
         {
-            var userFromDB = await _userRepository.GetIdAsync(id);
+            var userFromDB = await _userRepository.GetIdShallowAsync(id);
             if (userFromDB == null) { return null; }
-            return _mapper.Map<UserDto>(userFromDB);
+            var map = _mapper.Map<UserDto>(userFromDB);
+            return map;
         }
 
-        public async Task<bool> UpdateUserAsync(int userId, UserDto updatedUser)
+        public async Task<bool> UpdateUserAsync(UserWithIdDto updatedUser)
         {
-            var userFromDB = await _userRepository.GetIdAsync(userId);
+            var userFromDB = await _userRepository.FindEntitySallowAsync(updatedUser.UserId);
             if (userFromDB == null) { return false; }
             _mapper.Map(updatedUser, userFromDB);
-            return await _userRepository.UpdateEntity(userFromDB);
+            return await _userRepository.UpdateEntity(updatedUser);
         }
 
-        public async Task<CreatedUserDto> CreateUserAsync(UserDto newUser)
+        public async Task<UserWithIdDto> CreateUserAsync(UserDto newUser)
         {
-            if (newUser == null) { return null; }
-            var userEntity = _mapper.Map<User>(newUser);
-            return _mapper.Map<CreatedUserDto>((await _userRepository.CreateEntityAsync(userEntity)));
+            return _mapper.Map<UserWithIdDto>(await _userRepository.CreateEntityAsync(_mapper.Map<UserWithIdDto>(newUser)));
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
-            var UserFromDB = await _userRepository.FindEntityAsync(userId);
+            var UserFromDB = await _userRepository.FindEntitySallowAsync(userId);
             if (UserFromDB == null) { return false; }
-            return await _userRepository.DeleteEntityAsync(UserFromDB);
+            return await _userRepository.DeleteEntityShallowAsync(UserFromDB);
         }
     }
 }

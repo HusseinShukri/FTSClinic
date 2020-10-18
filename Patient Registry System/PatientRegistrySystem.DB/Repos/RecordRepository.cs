@@ -22,10 +22,15 @@ namespace PatientRegistrySystem.DB.Repos
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteEntityAsync(Record entity)
+        public async Task<bool> DeleteEntityDeepAsync(Record entity)
         {
             patientContext.Remove(entity);
             return await this.SaveChangesAsync(); 
+        }
+
+        public Task<bool> DeleteEntityShallowAsync(Record entity)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Record> Findentities(Expression<Func<Record, bool>> predicate)
@@ -33,19 +38,19 @@ namespace PatientRegistrySystem.DB.Repos
             throw new NotImplementedException();
         }
 
-        public async Task<Record> FindEntityAsync(int entityId)
+        public async Task<Record> FindEntitySallowAsync(int entityId)
         {
             //for debugging
-            var temp = await patientContext.Record.FirstOrDefaultAsync(u => u.UserID == entityId);
+            var temp = await patientContext.Record.AsNoTracking().FirstOrDefaultAsync(u => u.UserID == entityId);
             return temp;
         }
 
-        public Task<IEnumerable<Record>> GetAllAsync()
+        public Task<IEnumerable<Record>> GetAllShallowAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Record> GetIdAsync(int entityId)
+        public Task<Record> GetIdShallowAsync(int entityId)
         {
             throw new NotImplementedException();
         }

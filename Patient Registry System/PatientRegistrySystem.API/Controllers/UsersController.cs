@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using PatientRegistrySystem.DB.Filters;
 using PatientRegistrySystem.Domain.Dto;
 using PatientRegistrySystem.Services;
 
@@ -10,11 +10,13 @@ namespace PatientRegistrySystem.API.Controllers
     [Route("[controller]")]
     public class UsersController : Controller
     {
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper Mapper)
         {
             _userService = userService;
+            _mapper = Mapper;
         }
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
@@ -27,30 +29,30 @@ namespace PatientRegistrySystem.API.Controllers
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _userService.GetUserAsync(id);
-            if (user == null) { return NotFound(); } else { return Ok(user); }
+            if (user == null) { return BadRequest("User doesn't exist"); } else { return Ok(user); }
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UserDto user)
+        public async Task<IActionResult> UpdateUser([FromBody] UserWithIdDto user)
         {
-            if (user == null) { return NotFound(); }
-            if (!await _userService.UpdateUserAsync(id, user)) { return NotFound(); }
-            else { return RedirectToAction("GetUser", "Users", new { id }); }
+            if (user == null) { return BadRequest(); }
+            if (!await _userService.UpdateUserAsync(user)) { return BadRequest("User doesn't exist"); }
+            else { return RedirectToAction("GetUser", "Users", new { id=user.UserId }); }
         }
 
         [HttpPost]
-        [UserResultFilterAttribute]
         public async Task<IActionResult> CreateUser([FromBody] UserDto user)
         {
+            if (user == null) { return BadRequest(); }
             var createdUser = await _userService.CreateUserAsync(user);
-            if (createdUser == null) { return NotFound(); }
-            else { return CreatedAtRoute("GetUser", new { id = createdUser.UserId }, createdUser); }
+            if (createdUser == null) { return BadRequest("0 users crreated"); }
+            else { return CreatedAtRoute("GetUser", new { id = createdUser.UserId }, _mapper.Map<UserDto>(createdUser)); }
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (!await _userService.DeleteUserAsync(id)) { return NotFound(); } else { return NoContent(); }
+            if (!await _userService.DeleteUserAsync(id)) { return BadRequest("User doesn't exist"); } else { return NoContent(); }
         }
     }
 }

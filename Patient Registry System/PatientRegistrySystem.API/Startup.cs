@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using PatientRegistrySystem.DB.Contexts;
 using PatientRegistrySystem.Services;
 using PatientRegistrySystem.DB.Repos;
+using Hellang.Middleware.ProblemDetails;
 
 namespace PatientRegistrySystem.API
 {
@@ -23,7 +24,7 @@ namespace PatientRegistrySystem.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
+            services.AddProblemDetails();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRecordRepository, RecordRepository>();
@@ -51,6 +52,7 @@ namespace PatientRegistrySystem.API
             {
                 app.UseExceptionHandler();
             }
+            app.UseProblemDetails();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

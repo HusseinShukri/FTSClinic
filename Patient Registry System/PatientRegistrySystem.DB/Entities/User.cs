@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.DB.Entities
@@ -8,6 +7,7 @@ namespace PatientRegistrySystem.DB.Entities
     {
         [Key]
         public int UserId { get; set; }
+        public bool IsDeleted { get; set; } = false;
         [StringLength(30)]
         [Required(ErrorMessage = "The FirstName is required")]
         public string FirstName { get; set; }

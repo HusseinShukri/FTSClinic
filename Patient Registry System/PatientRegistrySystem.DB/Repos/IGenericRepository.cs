@@ -9,11 +9,11 @@ namespace PatientRegistrySystem.DB.Repos
     {
         Task<T> CreateEntityAsync(T entity);
         Task<bool> UpdateEntity(T entity);
-        Task<T> GetIdAsync(int entityId);
-        Task<IEnumerable<T>> GetAllAsync();
-        IEnumerable<T> Findentities(Expression<Func<T, bool>> predicate);
-        Task<T> FindEntityAsync(int entityId);
-        Task<bool> DeleteEntityAsync(T entity);
+        Task<T> GetIdShallowAsync(int entityId);
+        Task<IEnumerable<T>> GetAllShallowAsync();
+        Task<T> FindEntitySallowAsync(int entityId);
+        Task<bool> DeleteEntityDeepAsync(T entity);
+        Task<bool> DeleteEntityShallowAsync(T entity);
         Task<bool> SaveChangesAsync();
     }
 }
