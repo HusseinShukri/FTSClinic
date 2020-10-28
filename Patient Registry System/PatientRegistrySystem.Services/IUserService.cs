@@ -8,8 +8,8 @@ namespace PatientRegistrySystem.Services
     {
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserAsync(int id);
-        Task<bool> UpdateUserAsync(UserWithIdDto updatedUser);
-        Task<UserWithIdDto> CreateUserAsync(UserDto newUser);
+        Task<bool> UpdateUserAsync(UserDto updatedUser);
+        Task<UserDto> CreateUserAsync(UserDto newUser);
         Task<bool> DeleteUserAsync(int userId);
     }
 }

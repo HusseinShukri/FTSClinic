@@ -2,7 +2,7 @@
 
 namespace PatientRegistrySystem.DB.Repos
 {
-    public interface IUserRepository : IGenericRepository<UserWithIdDto>
+    public interface IUserRepository : IGenericRepository<UserDto>
     {
         
     }

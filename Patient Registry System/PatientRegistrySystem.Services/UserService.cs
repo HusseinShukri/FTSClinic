@@ -29,11 +29,10 @@ namespace PatientRegistrySystem.Services
         {
             var userFromDB = await _userRepository.GetIdShallowAsync(id);
             if (userFromDB == null) { return null; }
-            var map = _mapper.Map<UserDto>(userFromDB);
-            return map;
+            return userFromDB;
         }
 
-        public async Task<bool> UpdateUserAsync(UserWithIdDto updatedUser)
+        public async Task<bool> UpdateUserAsync(UserDto updatedUser)
         {
             var userFromDB = await _userRepository.FindEntitySallowAsync(updatedUser.UserId);
             if (userFromDB == null) { return false; }
@@ -41,9 +40,9 @@ namespace PatientRegistrySystem.Services
             return await _userRepository.UpdateEntity(updatedUser);
         }
 
-        public async Task<UserWithIdDto> CreateUserAsync(UserDto newUser)
+        public async Task<UserDto> CreateUserAsync(UserDto newUser)
         {
-            return _mapper.Map<UserWithIdDto>(await _userRepository.CreateEntityAsync(_mapper.Map<UserWithIdDto>(newUser)));
+            return _mapper.Map<UserDto>(await _userRepository.CreateEntityAsync(_mapper.Map<UserDto>(newUser)));
         }
 
         public async Task<bool> DeleteUserAsync(int userId)

@@ -23,9 +23,9 @@ namespace PatientRegistrySystem.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserWithIdDto>> GetAllShallowAsync()
+        public async Task<IEnumerable<UserDto>> GetAllShallowAsync()
         {
-            return _mapper.Map<UserWithIdDto[]>(await _patientContext.User
+            return _mapper.Map<UserDto[]>(await _patientContext.User
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
@@ -37,9 +37,9 @@ namespace PatientRegistrySystem.Services
                     .ToArrayAsync());
         }
 
-        public async Task<UserWithIdDto> GetIdShallowAsync(int entityId)
+        public async Task<UserDto> GetIdShallowAsync(int entityId)
         {
-            var map = _mapper.Map<UserWithIdDto>(await _patientContext.User
+            var map = _mapper.Map<UserDto>(await _patientContext.User
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
@@ -52,22 +52,22 @@ namespace PatientRegistrySystem.Services
             return map;
         }
 
-        public async Task<bool> UpdateEntity(UserWithIdDto entity)
+        public async Task<bool> UpdateEntity(UserDto entity)
         {
             var userEntity = _mapper.Map<User>(entity);
             _patientContext.User.Update(userEntity);
             return await this.SaveChangesAsync();
         }
 
-        public async Task<UserWithIdDto> CreateEntityAsync(UserWithIdDto entity)
+        public async Task<UserDto> CreateEntityAsync(UserDto entity)
         {
             var userEntity = _mapper.Map<User>(entity);
             await _patientContext.User.AddAsync(userEntity);
             await this.SaveChangesAsync();
-            return _mapper.Map<UserWithIdDto>(userEntity);
+            return _mapper.Map<UserDto>(userEntity);
         }
 
-        public async Task<bool> DeleteEntityDeepAsync(UserWithIdDto entity)
+        public async Task<bool> DeleteEntityDeepAsync(UserDto entity)
         {
             var userEntity = _mapper.Map<User>(entity);
             var findrecord = await _recordRepository.FindEntitySallowAsync(userEntity.UserId);
@@ -76,7 +76,7 @@ namespace PatientRegistrySystem.Services
             return await this.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteEntityShallowAsync(UserWithIdDto entity)
+        public async Task<bool> DeleteEntityShallowAsync(UserDto entity)
         {
             var userEntity = _mapper.Map<User>(entity);
             userEntity.IsDeleted = true;
@@ -84,9 +84,9 @@ namespace PatientRegistrySystem.Services
             return await this.SaveChangesAsync();
         }
 
-        public async Task<UserWithIdDto> FindEntitySallowAsync(int entityId)
+        public async Task<UserDto> FindEntitySallowAsync(int entityId)
         {
-            return _mapper.Map<UserWithIdDto>(await _patientContext.User.AsNoTracking()
+            return _mapper.Map<UserDto>(await _patientContext.User.AsNoTracking()
                 .Where(u => u.IsDeleted == false)
                 .FirstOrDefaultAsync(u => u.UserId == entityId));
         }

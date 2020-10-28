@@ -136,7 +136,7 @@ namespace PatientRegistrySystem.DB.Seeds
                     EndDate = new DateTime(2020, 5, 16),
                     Case = "Heartburn",
                     ExtrInfo = "Nothing here",
-                    Status = 0,
+                    Status = 4,
                     ApprovedBy = 1
                 },
                 new Record
@@ -149,7 +149,7 @@ namespace PatientRegistrySystem.DB.Seeds
                     EndDate = new DateTime(2020, 4, 5),
                     Case = "Pregnant needs nutritions",
                     ExtrInfo = "Pregnancy Vitamins",
-                    Status = 0,
+                    Status = 4,
                     ApprovedBy = 1
                 },
                 new Record
@@ -162,7 +162,7 @@ namespace PatientRegistrySystem.DB.Seeds
                     EndDate = null,
                     Case = "we dont know eat",
                     ExtrInfo = "Nothing here",
-                    Status = 1,
+                    Status = 0,
                     ApprovedBy = 2
                 });
             #endregion

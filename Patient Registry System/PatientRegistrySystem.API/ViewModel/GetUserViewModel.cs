@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using PatientRegistrySystem.Domain.Dto;
+using System.Collections.Generic;
 
-namespace PatientRegistrySystem.Domain.Dto
+namespace PatientRegistrySystem.API.ViewModel
 {
-    public class UserWithIdDto
+    public class GetUserViewModel
     {
-        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
 
@@ -16,5 +14,6 @@ namespace PatientRegistrySystem.Domain.Dto
         public List<DoctorDto> Doctor { get; set; } = new List<DoctorDto>();
         public List<EmployeeDto> Employee { get; set; } = new List<EmployeeDto>();
         public List<RecordDto> Record { get; set; } = new List<RecordDto>();
+
     }
 }
