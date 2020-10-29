@@ -6,7 +6,7 @@ namespace PatientRegistrySystem.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserAsync(int id);
         Task<bool> UpdateUserAsync(UserDto updatedUser);
         Task<UserDto> CreateUserAsync(UserDto newUser);

@@ -23,9 +23,9 @@ namespace PatientRegistrySystem.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllShallowAsync()
+        public async Task<List<UserDto>> GetAllShallowAsync()
         {
-            return _mapper.Map<UserDto[]>(await _patientContext.User
+            return _mapper.Map<List<UserDto>>(await _patientContext.User
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
@@ -34,7 +34,7 @@ namespace PatientRegistrySystem.Services
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
                     .Include(d => d.Record).ThenInclude(dd => dd.Doctor)
                     .Where(u => u.IsDeleted == false)
-                    .ToArrayAsync());
+                    .ToListAsync());
         }
 
         public async Task<UserDto> GetIdShallowAsync(int entityId)

@@ -10,7 +10,7 @@ namespace PatientRegistrySystem.DB.Repos
         Task<T> CreateEntityAsync(T entity);
         Task<bool> UpdateEntity(T entity);
         Task<T> GetIdShallowAsync(int entityId);
-        Task<IEnumerable<T>> GetAllShallowAsync();
+        Task<List<T>> GetAllShallowAsync();
         Task<T> FindEntitySallowAsync(int entityId);
         Task<bool> DeleteEntityDeepAsync(T entity);
         Task<bool> DeleteEntityShallowAsync(T entity);

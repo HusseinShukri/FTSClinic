@@ -45,7 +45,7 @@ namespace PatientRegistrySystem.DB.Repos
             return temp;
         }
 
-        public Task<IEnumerable<Record>> GetAllShallowAsync()
+        public Task<List<Record>> GetAllShallowAsync()
         {
             throw new NotImplementedException();
         }

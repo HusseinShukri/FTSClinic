@@ -36,7 +36,7 @@ namespace PatientRegistrySystem.API.Controllers
         {
             var users = await _userService.GetAllUsersAsync();
             if (users == null) { return NotFound(); }
-            else { return Ok(_mapper.Map<GetUserViewModel[]>(users)); }
+            else { return Ok(new GetUsersViewModel { Users = users }); }
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace PatientRegistrySystem.API.Controllers
         {
             var user = await _userService.GetUserAsync(id);
             if (user == null) { return BadRequest("User doesn't exist"); }
-            else { return Ok(_mapper.Map<GetUserViewModel>(user)); }
+            else { return Ok(new GetUserViewModel { User = user }); }
         }
 
         /// <summary>
