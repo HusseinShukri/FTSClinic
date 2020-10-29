@@ -1,91 +1,99 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PatientRegistrySystem.DB.Contexts;
 using PatientRegistrySystem.DB.Entities;
 using PatientRegistrySystem.DB.Repos;
-using System;
+using PatientRegistrySystem.Domain.Dto;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace PatientRegistrySystem.Services
 {
-    public class UserRepository : GenericRepository<User>
+    public class UserRepository : IUserRepository
     {
-        public UserRepository(PatientContext context) : base(context)
+        private readonly PatientContext _patientContext;
+        private readonly IRecordRepository _recordRepository;
+        private readonly IMapper _mapper;
+
+        public UserRepository(PatientContext patientContext, IRecordRepository recordRepository, IMapper mapper)
         {
+            _patientContext = patientContext;
+            _recordRepository = recordRepository;
+            _mapper = mapper;
         }
 
-        public override User AddEntity(User entity)
+        public async Task<List<UserDto>> GetAllShallowAsync()
         {
-            return base.AddEntity(entity);
-        }
-
-        public override void DeleteEntity(User user)
-        {
-            using (var contect = new PatientContext())
-            {
-
-            }
-
-            using (var context = new PatientContext())
-            {
-                var recod = context.Record.FirstOrDefault(u => u.UserID == user.UserId);
-                context.Remove(recod);
-                context.SaveChanges();
-            }
-            base.DeleteEntity(user);
-        }
-
-        public override IEnumerable<User> FindEntity(Expression<Func<User, bool>> predicate)
-        {
-            return base.FindEntity(predicate);
-        }
-
-        public override IEnumerable<User> GetAll()
-        {
-            List<User> users;
-            using (var context = new PatientContext())
-            {
-                users = context.User
+            return _mapper.Map<List<UserDto>>(await _patientContext.User
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
-                    .Include(r => r.Record)
-                    .ToList();
-            }
-            return users;
+                    .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
+                    .Include(d => d.Record).ThenInclude(dd => dd.Doctor)
+                    .Where(u => u.IsDeleted == false)
+                    .ToListAsync());
         }
 
-        public override User GetId(int id)
+        public async Task<UserDto> GetIdShallowAsync(int entityId)
         {
-            User user;
-            using (var context = new PatientContext())
-            {
-                user = context.User
-                    .Include(e => e.Employee).Where(u => u.UserId == id)
-                    .Include(d => d.Employee)
+            var map = _mapper.Map<UserDto>(await _patientContext.User
+                    .Include(e => e.Employee)
+                    .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
-                    .Include(r => r.Record)
-                    .FirstOrDefault(u => u.UserId == id);
-            }
-            return user;
+                    .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
+                    .Include(d => d.Record).ThenInclude(dd => dd.Doctor)
+                    .Where(u => u.IsDeleted == false)
+                    .FirstOrDefaultAsync(u => u.UserId == entityId));
+            return map;
         }
-        public override void CreateEntity(User entity)
+
+        public async Task<bool> UpdateEntity(UserDto entity)
         {
-            base.CreateEntity(entity);
-            base.SaveChanges();
+            var userEntity = _mapper.Map<User>(entity);
+            _patientContext.User.Update(userEntity);
+            return await this.SaveChangesAsync();
         }
 
-        public override User UpdateEntity(User entity)
+        public async Task<UserDto> CreateEntityAsync(UserDto entity)
         {
-            return base.UpdateEntity(entity);
+            var userEntity = _mapper.Map<User>(entity);
+            await _patientContext.User.AddAsync(userEntity);
+            await this.SaveChangesAsync();
+            return _mapper.Map<UserDto>(userEntity);
         }
 
-        public override void SaveChanges()
+        public async Task<bool> DeleteEntityDeepAsync(UserDto entity)
         {
-            base.SaveChanges();
+            var userEntity = _mapper.Map<User>(entity);
+            var findrecord = await _recordRepository.FindEntitySallowAsync(userEntity.UserId);
+            if (findrecord != null) { await _recordRepository.DeleteEntityDeepAsync(findrecord); }
+            _patientContext.User.Remove(userEntity);
+            return await this.SaveChangesAsync();
         }
 
+        public async Task<bool> DeleteEntityShallowAsync(UserDto entity)
+        {
+            var userEntity = _mapper.Map<User>(entity);
+            userEntity.IsDeleted = true;
+            _patientContext.User.Update(userEntity);
+            return await this.SaveChangesAsync();
+        }
 
+        public async Task<UserDto> FindEntitySallowAsync(int entityId)
+        {
+            return _mapper.Map<UserDto>(await _patientContext.User.AsNoTracking()
+                .Where(u => u.IsDeleted == false)
+                .FirstOrDefaultAsync(u => u.UserId == entityId));
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _patientContext.SaveChangesAsync() > 0);
+        }
     }
 }

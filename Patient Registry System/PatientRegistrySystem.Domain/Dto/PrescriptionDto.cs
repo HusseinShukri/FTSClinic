@@ -7,7 +7,7 @@ namespace PatientRegistrySystem.Domain.Dto
     {
         public string LabTest { get; set; }
         public List<MedicineDto> Medicines { get; set; }
-        public DateTime ExtraInformation { get; set; }
+        public string ExtraInformation { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
 }

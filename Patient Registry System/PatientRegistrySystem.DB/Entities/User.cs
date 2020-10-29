@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.DB.Entities
@@ -8,6 +7,7 @@ namespace PatientRegistrySystem.DB.Entities
     {
         [Key]
         public int UserId { get; set; }
+        public bool IsDeleted { get; set; } = false;
         [StringLength(30)]
         [Required(ErrorMessage = "The FirstName is required")]
         public string FirstName { get; set; }
@@ -43,18 +43,16 @@ namespace PatientRegistrySystem.DB.Entities
         //{
         //}
 
-        //public User(Action<object, string> lazyLoader)
+        //private User(Action<object, string> lazyLoader)
         //{
         //    LazyLoader = lazyLoader;
         //}
-        //public Action<object, string> LazyLoader { get; }
+        //private Action<object, string> LazyLoader { get; }
 
-        //private List<UserRole> userRole;
         //private List<Record> record;
         //private List<Employee> employee;
         //private List<Doctor> doctor;
 
-        //public List<UserRole> UserRole { get => LazyLoader.Load(this, ref userRole); set => userRole = value; }
         //public List<Record> Record { get => LazyLoader.Load(this, ref record); set => record = value; }
         //public List<Employee> Employee { get => LazyLoader.Load(this, ref employee); set => employee = value; }
         //public List<Doctor> Doctor { get => LazyLoader.Load(this, ref doctor); set => doctor = value; }

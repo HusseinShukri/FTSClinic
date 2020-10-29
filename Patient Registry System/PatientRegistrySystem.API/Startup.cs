@@ -8,7 +8,10 @@ using Microsoft.Extensions.Configuration;
 using PatientRegistrySystem.DB.Contexts;
 using PatientRegistrySystem.Services;
 using PatientRegistrySystem.DB.Repos;
-using PatientRegistrySystem.DB.Entities;
+using Hellang.Middleware.ProblemDetails;
+using System.Reflection;
+using System.IO;
+using System;
 
 namespace PatientRegistrySystem.API
 {
@@ -23,12 +26,36 @@ namespace PatientRegistrySystem.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
             services.AddControllers();
-            
-            services.AddScoped<IGenericRepository<User>, UserRepository>();
+            services.AddProblemDetails();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
-            
-            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly);
+            services.AddScoped<IRecordRepository, RecordRepository>();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddSwaggerGen(setupAction =>
+            {
+                setupAction.SwaggerDoc("ClinicOpenAPISpecification",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "FTS Clinic API",
+                        Version = "1",
+                        Description = "Through this API you can access Users and their roles",
+                        Contact = new Microsoft.OpenApi.Models.OpenApiContact()
+                        {
+                            Email = "Hussein00Shukri@hotmail.com",
+                            Name = "Hussein Shukri",
+                            Url = new Uri("https://github.com/HusseinShukri/FTSClinic")
+                        }
+                    });
+                var xmlCommentFiles = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFiles);
+                setupAction.IncludeXmlComments(xmlCommentsFullPath);
+
+            });
+
+            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly, typeof(API.Profiles.MapperProfile).Assembly);
             services.AddDbContext<PatientContext>(options =>
             {
                 options
@@ -47,7 +74,15 @@ namespace PatientRegistrySystem.API
             {
                 app.UseExceptionHandler();
             }
+            app.UseProblemDetails();
             app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(setupAction =>
+            {
+                setupAction.SwaggerEndpoint(
+                    "ClinicOpenAPISpecification/swagger.json",
+                    "Clinic API");
+            });
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();

@@ -22,9 +22,7 @@ namespace PatientRegistrySystem.DB.Entities
 
         [Required(ErrorMessage = "The StartDate is required")]
         public DateTime StartDate { get; set; }
-
-        [Required(ErrorMessage = "The EndDate is required")]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "The Case is required")]
         [MaxLength(500)]
