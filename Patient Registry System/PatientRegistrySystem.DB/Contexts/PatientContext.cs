@@ -9,7 +9,7 @@ namespace PatientRegistrySystem.DB.Contexts
         public PatientContext()
         {
         }
-        public PatientContext(DbContextOptions options) : base(options)
+        public PatientContext(DbContextOptions<PatientContext> options) : base(options)
         {
         }
 

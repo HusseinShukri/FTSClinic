@@ -12,6 +12,8 @@ using Hellang.Middleware.ProblemDetails;
 using System.Reflection;
 using System.IO;
 using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 namespace PatientRegistrySystem.API
 {
@@ -55,13 +57,24 @@ namespace PatientRegistrySystem.API
 
             });
 
-            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly, typeof(API.Profiles.MapperProfile).Assembly);
+            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly);
             services.AddDbContext<PatientContext>(options =>
             {
                 options
                 .EnableSensitiveDataLogging()
                 .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem");
             });
+            services.AddDbContext<ApplicationIdentityDbContext>(options =>
+            {
+                options
+                .EnableSensitiveDataLogging()
+                .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem");
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddDefaultTokenProviders();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,6 +98,7 @@ namespace PatientRegistrySystem.API
             });
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
