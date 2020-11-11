@@ -10,14 +10,20 @@ namespace PatientRegistrySystem.DB.Profiles
     {
         public MapperProfile()
         {
+            CreateMap<ApplicationUser, ApplicationUserDto>()
+                .ForMember(dir => dir.User, opt => opt.MapFrom(src => src.User))
+                .ReverseMap();
+
             CreateMap<User, UserForRecoedDto>();
 
             CreateMap<User, UserDto>()
+                .ForMember(dir => dir.ApplicationUserDto, opt => opt.MapFrom(src => src.ApplicationUser))
                 .ForMember(dir => dir.Roles, opt => opt.MapFrom(src => src.UserRole.Select(ur => ur.Role)))
                 .ForMember(dir => dir.Employee, opt => opt.MapFrom(src => src.Employee))
                 .ForMember(dir => dir.Doctor, opt => opt.MapFrom(src => src.Doctor))
                 .ForMember(dir => dir.Record, opt => opt.MapFrom(src => src.Record))
                 .ReverseMap()
+                .ForMember(dir => dir.ApplicationUser, opt => opt.Ignore())
                 .ForMember(dir => dir.UserRole, opt => opt.Ignore())
                 .ForMember(dir => dir.Employee, opt => opt.Ignore())
                 .ForMember(dir => dir.Doctor, opt => opt.Ignore())

@@ -9,11 +9,11 @@ namespace PatientRegistrySystem.API
     {
         public static void Main(string[] args)
         {
-/*            using (var context = new PatientContext())
+            using (var identitycontext = new ApplicationIdentityDbContext())
             {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-            }*/
+                identitycontext.Database.EnsureDeleted();
+                identitycontext.Database.EnsureCreated();
+            }
             CreateHostBuilder(args).Build().Run();
         }
 

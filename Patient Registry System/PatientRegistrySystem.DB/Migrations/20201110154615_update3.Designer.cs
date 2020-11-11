@@ -9,17 +9,219 @@ using PatientRegistrySystem.DB.Contexts;
 
 namespace PatientRegistrySystem.DB.Migrations
 {
-    [DbContext(typeof(PatientContext))]
-    [Migration("20201012215406_ninit")]
-    partial class ninit
+    [DbContext(typeof(ApplicationIdentityDbContext))]
+    [Migration("20201110154615_update3")]
+    partial class update3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
+                });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Company", b =>
                 {
@@ -41,20 +243,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Company");
-
-                    b.HasData(
-                        new
-                        {
-                            CompanyId = 1,
-                            Address = "Birzeit",
-                            Name = "Birzeit Pharmaceutical Manufacturing Company"
-                        },
-                        new
-                        {
-                            CompanyId = 2,
-                            Address = "Ramallah and Al-Bireh",
-                            Name = "Jerusalem Pharmaceuticals"
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Doctor", b =>
@@ -81,15 +269,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Doctor");
-
-                    b.HasData(
-                        new
-                        {
-                            DoctorId = 1,
-                            Address1 = "Ramallah",
-                            Address2 = "Amman",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Employee", b =>
@@ -117,22 +296,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Employee");
-
-                    b.HasData(
-                        new
-                        {
-                            EmployeeId = 1,
-                            Adress = "Ramallah",
-                            DoctorId = 1,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            EmployeeId = 2,
-                            Adress = "Amman",
-                            DoctorId = 1,
-                            UserId = 5
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Medicine", b =>
@@ -160,29 +323,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasIndex("PrescriptionId");
 
                     b.ToTable("Medicine");
-
-                    b.HasData(
-                        new
-                        {
-                            MedicineId = 1,
-                            CompanyId = 1,
-                            Name = "GASTREX",
-                            PrescriptionId = 1
-                        },
-                        new
-                        {
-                            MedicineId = 2,
-                            CompanyId = 1,
-                            Name = "GASTREX",
-                            PrescriptionId = 2
-                        },
-                        new
-                        {
-                            MedicineId = 3,
-                            CompanyId = 2,
-                            Name = "A&D Vit",
-                            PrescriptionId = 2
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Prescription", b =>
@@ -206,22 +346,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasKey("PrescriptionId");
 
                     b.ToTable("Prescription");
-
-                    b.HasData(
-                        new
-                        {
-                            PrescriptionId = 1,
-                            ExpiryDate = new DateTime(2020, 6, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExtraInformation = "GASTREX on need",
-                            LabTest = "Stomach Acid Test"
-                        },
-                        new
-                        {
-                            PrescriptionId = 2,
-                            ExpiryDate = new DateTime(2020, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExtraInformation = "A&D Vit	2 times ber day for 2 weeks",
-                            LabTest = "Vitamins Test"
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Record", b =>
@@ -272,45 +396,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Record");
-
-                    b.HasData(
-                        new
-                        {
-                            RecordId = 1,
-                            ApprovedBy = 1,
-                            Case = "Heartburn",
-                            DoctorId = 1,
-                            EndDate = new DateTime(2020, 5, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExtrInfo = "Nothing here",
-                            PrescriptionId = 1,
-                            StartDate = new DateTime(2020, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            UserID = 1
-                        },
-                        new
-                        {
-                            RecordId = 2,
-                            ApprovedBy = 1,
-                            Case = "Pregnant needs nutritions",
-                            DoctorId = 1,
-                            EndDate = new DateTime(2020, 4, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ExtrInfo = "Pregnancy Vitamins",
-                            PrescriptionId = 2,
-                            StartDate = new DateTime(2020, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 0,
-                            UserID = 2
-                        },
-                        new
-                        {
-                            RecordId = 3,
-                            ApprovedBy = 2,
-                            Case = "we dont know eat",
-                            DoctorId = 1,
-                            ExtrInfo = "Nothing here",
-                            StartDate = new DateTime(2020, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            UserID = 5
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Role", b =>
@@ -328,28 +413,6 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Role");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            Name = "Patien"
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            Name = "General Practitioner"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            Name = "Registration Employee"
-                        },
-                        new
-                        {
-                            RoleId = 4,
-                            Name = "Accountant"
-                        });
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.User", b =>
@@ -359,15 +422,17 @@ namespace PatientRegistrySystem.DB.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Email")
+                    b.Property<string>("ApplicationUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -379,71 +444,12 @@ namespace PatientRegistrySystem.DB.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)")
-                        .HasMaxLength(15);
-
                     b.HasKey("UserId");
 
-                    b.ToTable("User");
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            Email = "Hussein@Shukri.com",
-                            FirstName = "Hussein",
-                            LastName = "Shukri",
-                            Login = "1234",
-                            Password = "1234",
-                            Phone = "1234"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Email = "Layan@Hassan.com",
-                            FirstName = "Layan",
-                            LastName = "Hassan",
-                            Login = "1234",
-                            Password = "1234",
-                            Phone = "1234"
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            Email = "Hamza@Kamal.com",
-                            FirstName = "Hamza",
-                            LastName = "Kamal",
-                            Login = "1234",
-                            Password = "1234",
-                            Phone = "1234"
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            Email = "Ali@Tahboub.com",
-                            FirstName = "Ali",
-                            LastName = "Tahboub",
-                            Login = "1234",
-                            Password = "1234",
-                            Phone = "1234"
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            Email = "Mahran@Yacoub.com",
-                            FirstName = "Mahran",
-                            LastName = "Yacoub",
-                            Login = "1234",
-                            Password = "1234",
-                            Phone = "1234"
-                        });
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.UserRole", b =>
@@ -459,38 +465,64 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRole");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            RoleId = 3
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            RoleId = 4
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            RoleId = 1
-                        });
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Doctor", b =>
@@ -553,6 +585,15 @@ namespace PatientRegistrySystem.DB.Migrations
                         .WithMany("Record")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.User", b =>
+                {
+                    b.HasOne("PatientRegistrySystem.DB.Entities.ApplicationUser", "ApplicationUser")
+                        .WithOne("User")
+                        .HasForeignKey("PatientRegistrySystem.DB.Entities.User", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

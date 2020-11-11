@@ -12,13 +12,11 @@ namespace PatientRegistrySystem.API.Controllers
     [Route("[controller]")]
     public class UsersController : Controller
     {
-        public UsersController(IUserService userService, IMapper mapper)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _mapper = mapper;
         }
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
         /// <summary>
         /// Get all users 

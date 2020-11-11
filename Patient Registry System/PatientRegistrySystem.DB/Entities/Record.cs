@@ -10,7 +10,7 @@ namespace PatientRegistrySystem.DB.Entities
         public int RecordId { get; set; }
 
         [Required(ErrorMessage = "The Pationt user is required")]
-        [ForeignKey(nameof(User))]
+        [ForeignKey(nameof(UserID))]
         public int UserID { get; set; }
 
         [Required(ErrorMessage = "The Doctor user is required")]

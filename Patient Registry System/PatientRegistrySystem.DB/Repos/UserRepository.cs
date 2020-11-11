@@ -12,13 +12,13 @@ namespace PatientRegistrySystem.Services
 {
     public class UserRepository : IUserRepository
     {
-        private readonly PatientContext _patientContext;
+        private readonly ApplicationIdentityDbContext _patientContext;
         private readonly IRecordRepository _recordRepository;
         private readonly IMapper _mapper;
 
-        public UserRepository(PatientContext patientContext, IRecordRepository recordRepository, IMapper mapper)
+        public UserRepository(ApplicationIdentityDbContext applicationIdentityDbContext, IRecordRepository recordRepository, IMapper mapper)
         {
-            _patientContext = patientContext;
+            _patientContext = applicationIdentityDbContext;
             _recordRepository = recordRepository;
             _mapper = mapper;
         }
@@ -26,6 +26,7 @@ namespace PatientRegistrySystem.Services
         public async Task<List<UserDto>> GetAllShallowAsync()
         {
             return _mapper.Map<List<UserDto>>(await _patientContext.User
+                    .Include(a=>a.ApplicationUser)
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
@@ -40,6 +41,7 @@ namespace PatientRegistrySystem.Services
         public async Task<UserDto> GetIdShallowAsync(int entityId)
         {
             var map = _mapper.Map<UserDto>(await _patientContext.User
+                    .Include(a=>a.ApplicationUser)
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
                     .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)

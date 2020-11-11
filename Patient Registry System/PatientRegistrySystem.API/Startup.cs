@@ -14,6 +14,7 @@ using System.IO;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using PatientRegistrySystem.DB.Entities;
 
 namespace PatientRegistrySystem.API
 {
@@ -57,22 +58,21 @@ namespace PatientRegistrySystem.API
 
             });
 
-            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly);
-            services.AddDbContext<PatientContext>(options =>
-            {
-                options
-                .EnableSensitiveDataLogging()
-                .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem");
-            });
+            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly
+                , typeof(Profiles.MapperProfile).Assembly,
+                typeof(Domain.Profiles.MapperProfile).Assembly);
+
+
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
                 options
                 .EnableSensitiveDataLogging()
                 .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem");
             });
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders();
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
         }

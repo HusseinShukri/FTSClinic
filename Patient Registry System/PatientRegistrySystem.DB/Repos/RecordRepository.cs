@@ -10,9 +10,9 @@ namespace PatientRegistrySystem.DB.Repos
 {
    public class RecordRepository : IRecordRepository
     {
-        private readonly PatientContext patientContext;
+        private readonly ApplicationIdentityDbContext patientContext;
 
-        public RecordRepository(PatientContext patientContext )
+        public RecordRepository(ApplicationIdentityDbContext patientContext )
         {
             this.patientContext = patientContext;
         }
