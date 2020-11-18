@@ -113,7 +113,17 @@ namespace PatientRegistrySystem.API.Controllers
             }
             else
             {
-                return BadRequest("Input problem");
+                string messages = "";
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        messages += string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                    }
+                }
+                return BadRequest(messages);
             }
         }
 
@@ -154,7 +164,17 @@ namespace PatientRegistrySystem.API.Controllers
             }
             else
             {
-                return BadRequest("Input problem");
+                string messages = "";
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        messages += string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                    }
+                }
+                return BadRequest(messages);
             }
         }
     }

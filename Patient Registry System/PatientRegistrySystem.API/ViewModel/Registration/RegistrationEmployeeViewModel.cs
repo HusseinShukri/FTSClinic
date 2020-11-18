@@ -2,7 +2,7 @@
 
 namespace PatientRegistrySystem.API.ViewModel.Registration
 {
-    public class RegistrationViewModel
+    public class RegistrationEmployeeViewModel
     {
         [StringLength(30, ErrorMessage = "Max Length is {1}")]
         [Required(ErrorMessage = "The FirstName is required")]
@@ -29,5 +29,10 @@ namespace PatientRegistrySystem.API.ViewModel.Registration
         [Required(ErrorMessage = "The Phone is required")]
         [StringLength(15, ErrorMessage = "Max Length is {1}")]
         public string Phone { get; set; }
+
+        [Display(Name = "Worke Adress")]
+        [Required(ErrorMessage = "The Adress is required")]
+        [StringLength(50, ErrorMessage = "Max Length is {1}")]
+        public string Adress { get; set; }
     }
 }

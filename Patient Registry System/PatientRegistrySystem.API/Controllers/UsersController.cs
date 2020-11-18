@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PatientRegistrySystem.API.ViewModel;
@@ -10,8 +10,10 @@ namespace PatientRegistrySystem.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
+
         public UsersController(IUserService userService)
         {
             _userService = userService;

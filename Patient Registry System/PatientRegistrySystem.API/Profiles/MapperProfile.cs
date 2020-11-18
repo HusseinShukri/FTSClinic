@@ -11,6 +11,8 @@ namespace PatientRegistrySystem.API.Profiles
         {
             CreateMap<UserDto, RegistrationViewModel>().ReverseMap();
             CreateMap<User, RegistrationViewModel>().ReverseMap();
+            CreateMap<User, RegistrationDoctoreViewModel>().ReverseMap();
+            CreateMap<User, RegistrationEmployeeViewModel>().ReverseMap();
         }
     }
 }

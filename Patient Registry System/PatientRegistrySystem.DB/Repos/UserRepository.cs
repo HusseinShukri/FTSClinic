@@ -29,7 +29,6 @@ namespace PatientRegistrySystem.Services
                     .Include(a=>a.ApplicationUser)
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
-                    //.Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
                     .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
@@ -38,20 +37,45 @@ namespace PatientRegistrySystem.Services
                     .ToListAsync());
         }
 
-        public async Task<UserDto> GetIdShallowAsync(int entityId)
+        public async Task<List<UserDto>> GetAllDoctorsShallowAsync()
         {
-            var map = _mapper.Map<UserDto>(await _patientContext.User
-                    .Include(a=>a.ApplicationUser)
+            return _mapper.Map<List<UserDto>>(await _patientContext.User
+                    .Include(a => a.ApplicationUser)
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
-                    //.Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
+                    .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
+                    .Include(d => d.Record).ThenInclude(dd => dd.Doctor)
+                    .Where(u => u.IsDeleted == false && u.Doctor.Any())
+                    .ToListAsync());
+        }
+        public async Task<List<UserDto>> GetAllEmployeesShallowAsync()
+        {
+            return _mapper.Map<List<UserDto>>(await _patientContext.User
+                    .Include(a => a.ApplicationUser)
+                    .Include(e => e.Employee)
+                    .Include(d => d.Doctor)
+                    .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
+                    .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
+                    .Include(d => d.Record).ThenInclude(dd => dd.Doctor)
+                    .Where(u => u.IsDeleted == false && u.Employee.Any())
+                    .ToListAsync());
+        }
+
+        public async Task<UserDto> GetIdShallowAsync(int entityId)
+        {
+            return _mapper.Map<UserDto>(await _patientContext.User
+                    .Include(a => a.ApplicationUser)
+                    .Include(e => e.Employee)
+                    .Include(d => d.Doctor)
                     .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
                     .Include(d => d.Record).ThenInclude(dd => dd.Doctor)
                     .Where(u => u.IsDeleted == false)
-                    .FirstOrDefaultAsync(u => u.UserId == entityId));
-            return map;
+                    .FirstOrDefaultAsync(u => u.UserId == entityId)); ;
         }
 
         public async Task<bool> UpdateEntity(UserDto entity)
@@ -63,6 +87,7 @@ namespace PatientRegistrySystem.Services
 
         public async Task<UserDto> CreateEntityAsync(UserDto entity)
         {
+            var s = _patientContext.Add<ApplicationUser>(null);
             var userEntity = _mapper.Map<User>(entity);
             await _patientContext.User.AddAsync(userEntity);
             await SaveChangesAsync();
