@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PatientRegistrySystem.DB.Entities;
+using PatientRegistrySystem.DB.Seeds;
 
 namespace PatientRegistrySystem.DB.Contexts
 {
@@ -19,12 +20,12 @@ namespace PatientRegistrySystem.DB.Contexts
         public DbSet<Medicine> Medicine { get; set; }
         public DbSet<Prescription> Prescription { get; set; }
         public DbSet<Record> Record { get; set; }
-        public DbSet<Role> Role { get; set; }
         public DbSet<User> User { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override async void OnModelCreating(ModelBuilder modelBuilder)
         {
+           #region FluintApi
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(a => a.User)
                 .WithOne(u => u.ApplicationUser);
@@ -48,9 +49,8 @@ namespace PatientRegistrySystem.DB.Contexts
                 .HasMany(e => e.Record)
                 .WithOne(e => e.User).OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
-            modelBuilder.Entity<UserRole>().HasOne(u => u.User).WithMany(ur => ur.UserRole).HasForeignKey(u => u.UserId);
-            modelBuilder.Entity<UserRole>().HasOne(r => r.Role).WithMany(ur => ur.UserRole).HasForeignKey(r => r.RoleId);
+            #endregion
+            modelBuilder.Seed();
             base.OnModelCreating(modelBuilder);
         }
 

@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PatientRegistrySystem.DB.Contexts;
 
 namespace PatientRegistrySystem.DB.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201112014323_addSeed")]
+    partial class addSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -44,36 +46,6 @@ namespace PatientRegistrySystem.DB.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "0ba6331c-000f-43fa-ae71-618e9d322aba",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
-                            ConcurrencyStamp = "cfd532f3-84b5-4ccd-86b7-66c57c42cfd8",
-                            Name = "Doctor",
-                            NormalizedName = "DOCTOR"
-                        },
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
-                            ConcurrencyStamp = "fe8ecfc3-affc-417d-b2c8-b1109b8c573a",
-                            Name = "Employee",
-                            NormalizedName = "EMPLOYEE"
-                        },
-                        new
-                        {
-                            Id = "2c5e174e-3b0e-446f-86af-483d56fd7213",
-                            ConcurrencyStamp = "f72c8af9-b063-4bc3-baab-db7ecb5f7e6f",
-                            Name = "Patien",
-                            NormalizedName = "PATIEN"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -479,6 +451,45 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.ToTable("Record");
                 });
 
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            Name = "Patien"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            Name = "Employee"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            Name = "Doctor"
+                        },
+                        new
+                        {
+                            RoleId = 4,
+                            Name = "Admain"
+                        });
+                });
+
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -514,6 +525,21 @@ namespace PatientRegistrySystem.DB.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.UserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.ApplicationUser", b =>
@@ -642,6 +668,21 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasOne("PatientRegistrySystem.DB.Entities.ApplicationUser", "ApplicationUser")
                         .WithOne("User")
                         .HasForeignKey("PatientRegistrySystem.DB.Entities.User", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.UserRole", b =>
+                {
+                    b.HasOne("PatientRegistrySystem.DB.Entities.Role", "Role")
+                        .WithMany("UserRole")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PatientRegistrySystem.DB.Entities.User", "User")
+                        .WithMany("UserRole")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

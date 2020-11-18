@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PatientRegistrySystem.DB.Contexts;
 
 namespace PatientRegistrySystem.DB.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201117215107_AddRoles")]
+    partial class AddRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,28 +51,28 @@ namespace PatientRegistrySystem.DB.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "0ba6331c-000f-43fa-ae71-618e9d322aba",
+                            ConcurrencyStamp = "411af044-d8e8-44c6-b813-e47a2a9515c4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
-                            ConcurrencyStamp = "cfd532f3-84b5-4ccd-86b7-66c57c42cfd8",
+                            ConcurrencyStamp = "39792252-b7c3-43b4-8548-af02c7c4e806",
                             Name = "Doctor",
                             NormalizedName = "DOCTOR"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
-                            ConcurrencyStamp = "fe8ecfc3-affc-417d-b2c8-b1109b8c573a",
+                            ConcurrencyStamp = "48a99a8f-6958-4e7b-a17c-00d168ce991f",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7213",
-                            ConcurrencyStamp = "f72c8af9-b063-4bc3-baab-db7ecb5f7e6f",
+                            ConcurrencyStamp = "e22f53d3-5d6c-48c5-b832-6de9c6b1080a",
                             Name = "Patien",
                             NormalizedName = "PATIEN"
                         });
@@ -479,6 +481,23 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.ToTable("Record");
                 });
 
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.Role", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.HasKey("RoleId");
+
+                    b.ToTable("Role");
+                });
+
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -514,6 +533,21 @@ namespace PatientRegistrySystem.DB.Migrations
                         .IsUnique();
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.UserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole");
                 });
 
             modelBuilder.Entity("PatientRegistrySystem.DB.Entities.ApplicationUser", b =>
@@ -642,6 +676,21 @@ namespace PatientRegistrySystem.DB.Migrations
                     b.HasOne("PatientRegistrySystem.DB.Entities.ApplicationUser", "ApplicationUser")
                         .WithOne("User")
                         .HasForeignKey("PatientRegistrySystem.DB.Entities.User", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PatientRegistrySystem.DB.Entities.UserRole", b =>
+                {
+                    b.HasOne("PatientRegistrySystem.DB.Entities.Role", "Role")
+                        .WithMany("UserRole")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PatientRegistrySystem.DB.Entities.User", "User")
+                        .WithMany("UserRole")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

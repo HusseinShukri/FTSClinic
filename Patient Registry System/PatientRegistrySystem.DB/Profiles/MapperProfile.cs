@@ -10,6 +10,12 @@ namespace PatientRegistrySystem.DB.Profiles
     {
         public MapperProfile()
         {
+            //CreateMap<UserRole, UserRoleDto>()
+            //    .ForMember(dir => dir.RoleId, opt => opt.MapFrom(src => src.RoleId))
+            //    .ForMember(dir => dir.UserId, opt => opt.MapFrom(src => src.UserId))
+            //    .ReverseMap();
+
+
             CreateMap<ApplicationUser, ApplicationUserDto>()
                 .ForMember(dir => dir.User, opt => opt.MapFrom(src => src.User))
                 .ReverseMap();
@@ -18,13 +24,13 @@ namespace PatientRegistrySystem.DB.Profiles
 
             CreateMap<User, UserDto>()
                 .ForMember(dir => dir.ApplicationUserDto, opt => opt.MapFrom(src => src.ApplicationUser))
-                .ForMember(dir => dir.Roles, opt => opt.MapFrom(src => src.UserRole.Select(ur => ur.Role)))
+                //.ForMember(dir => dir.Roles, opt => opt.MapFrom(src => src.UserRole.Select(ur => ur.Role)))
                 .ForMember(dir => dir.Employee, opt => opt.MapFrom(src => src.Employee))
                 .ForMember(dir => dir.Doctor, opt => opt.MapFrom(src => src.Doctor))
                 .ForMember(dir => dir.Record, opt => opt.MapFrom(src => src.Record))
                 .ReverseMap()
                 .ForMember(dir => dir.ApplicationUser, opt => opt.Ignore())
-                .ForMember(dir => dir.UserRole, opt => opt.Ignore())
+                //.ForMember(dir => dir.UserRole, opt => opt.Ignore())
                 .ForMember(dir => dir.Employee, opt => opt.Ignore())
                 .ForMember(dir => dir.Doctor, opt => opt.Ignore())
                 .ForMember(dir => dir.Record, opt => opt.Ignore());
@@ -60,9 +66,9 @@ namespace PatientRegistrySystem.DB.Profiles
                 .ForMember(dir => dir.ExpiryDate, opt => opt.MapFrom(src => src.ExpiryDate))
                 .ReverseMap();
 
-            CreateMap<Role, RoleDto>()
-                .ForMember(r => r.RoleName, opt => opt.MapFrom(r => r.Name))
-                .ReverseMap();
+            //CreateMap<Role, RoleDto>()
+            //    .ForMember(r => r.RoleName, opt => opt.MapFrom(r => r.Name))
+            //    .ReverseMap();
 
             CreateMap<Record, RecordDto>()
                 .ForMember(dir => dir.PatinetName, opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"))

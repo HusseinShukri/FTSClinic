@@ -22,7 +22,6 @@ namespace PatientRegistrySystem.DB.Entities
         public string ApplicationUserId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; } = new ApplicationUser();
-        public List<UserRole> UserRole { get; set; } = new List<UserRole>();
         public List<Record> Record { get; set; } = new List<Record>();
         public List<Employee> Employee { get; set; } = new List<Employee>();
         public List<Doctor> Doctor { get; set; } = new List<Doctor>();

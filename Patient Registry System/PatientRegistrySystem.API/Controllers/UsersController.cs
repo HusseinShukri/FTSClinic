@@ -85,33 +85,6 @@ namespace PatientRegistrySystem.API.Controllers
         }
 
         /// <summary>
-        /// Create user by id number
-        /// </summary>
-        /// <param name="user">The user object you want to create</param>
-        /// <returns>an IAction result</returns>
-        /// <remarks>Sample requist() \
-        /// PUT Users/id \
-        /// { \
-        /// "firstName": "Hassan", \
-        /// "lastName": "Qadmany", \
-        /// "login": "1234", \
-        /// "password": "1234", \
-        /// "email": "Hassan@Qadmany.com", \
-        /// "phone": "1234" \
-        /// }</remarks>
-        /// <response code="201">Return the created User</response>
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserDto user)
-        {
-            if (user == null) { return BadRequest(); }
-            var createdUser = await _userService.CreateUserAsync(user);
-            if (createdUser == null) { return BadRequest("0 users crreated"); }
-            else { return CreatedAtRoute("GetUser", new { id = createdUser.UserId }, createdUser); }
-        }
-
-        /// <summary>
         /// delete user by id number
         /// </summary>
         /// <param name="id">The id of the user you want to delete</param>

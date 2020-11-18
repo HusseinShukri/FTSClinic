@@ -9,7 +9,6 @@ namespace PatientRegistrySystem.Services
         Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserAsync(int id);
         Task<bool> UpdateUserAsync(UserDto updatedUser);
-        Task<UserDto> CreateUserAsync(UserDto newUser);
         Task<bool> DeleteUserAsync(int userId);
     }
 }

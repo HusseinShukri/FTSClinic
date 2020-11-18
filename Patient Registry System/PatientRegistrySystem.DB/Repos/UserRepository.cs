@@ -29,7 +29,7 @@ namespace PatientRegistrySystem.Services
                     .Include(a=>a.ApplicationUser)
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
-                    .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
+                    //.Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
                     .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
@@ -44,7 +44,7 @@ namespace PatientRegistrySystem.Services
                     .Include(a=>a.ApplicationUser)
                     .Include(e => e.Employee)
                     .Include(d => d.Doctor)
-                    .Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
+                    //.Include(ur => ur.UserRole).ThenInclude(rr => rr.Role)
                     .Include(r => r.Record).ThenInclude(rr => rr.Prescription).ThenInclude(m => m.Medicines).ThenInclude(c => c.Company)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(d => d.Doctor).ThenInclude(u => u.User)
                     .Include(e => e.Record).ThenInclude(ee => ee.Employee).ThenInclude(u => u.User)
@@ -58,14 +58,14 @@ namespace PatientRegistrySystem.Services
         {
             var userEntity = _mapper.Map<User>(entity);
             _patientContext.User.Update(userEntity);
-            return await this.SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         public async Task<UserDto> CreateEntityAsync(UserDto entity)
         {
             var userEntity = _mapper.Map<User>(entity);
             await _patientContext.User.AddAsync(userEntity);
-            await this.SaveChangesAsync();
+            await SaveChangesAsync();
             return _mapper.Map<UserDto>(userEntity);
         }
 
@@ -75,7 +75,7 @@ namespace PatientRegistrySystem.Services
             var findrecord = await _recordRepository.FindEntitySallowAsync(userEntity.UserId);
             if (findrecord != null) { await _recordRepository.DeleteEntityDeepAsync(findrecord); }
             _patientContext.User.Remove(userEntity);
-            return await this.SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         public async Task<bool> DeleteEntityShallowAsync(UserDto entity)
@@ -83,7 +83,7 @@ namespace PatientRegistrySystem.Services
             var userEntity = _mapper.Map<User>(entity);
             userEntity.IsDeleted = true;
             _patientContext.User.Update(userEntity);
-            return await this.SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         public async Task<UserDto> FindEntitySallowAsync(int entityId)

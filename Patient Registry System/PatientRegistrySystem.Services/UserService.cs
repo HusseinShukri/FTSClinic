@@ -40,11 +40,6 @@ namespace PatientRegistrySystem.Services
             return await _userRepository.UpdateEntity(updatedUser);
         }
 
-        public async Task<UserDto> CreateUserAsync(UserDto newUser)
-        {
-            return _mapper.Map<UserDto>(await _userRepository.CreateEntityAsync(_mapper.Map<UserDto>(newUser)));
-        }
-
         public async Task<bool> DeleteUserAsync(int userId)
         {
             var UserFromDB = await _userRepository.FindEntitySallowAsync(userId);

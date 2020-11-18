@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientRegistrySystem.API",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientRegistrySystem.DB", "PatientRegistrySystem.DB\PatientRegistrySystem.DB.csproj", "{150A3B2C-97AF-407C-9587-C25B4A8BF05A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientRegistrySystem.Domain", "PatientRegistrySystem.Domain\PatientRegistrySystem.Domain.csproj", "{7423521F-96FD-4134-953E-6BF1FAD818EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientRegistrySystem.Domain", "PatientRegistrySystem.Domain\PatientRegistrySystem.Domain.csproj", "{7423521F-96FD-4134-953E-6BF1FAD818EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
