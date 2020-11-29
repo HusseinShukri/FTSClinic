@@ -7,6 +7,7 @@ namespace PatientRegistrySystem.DB.Entities
     public class Employee
     {
         [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int EmployeeId { get; set; }
 
         [ForeignKey(nameof(User))]

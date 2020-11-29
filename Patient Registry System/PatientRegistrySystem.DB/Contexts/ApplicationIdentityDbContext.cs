@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using PatientRegistrySystem.DB.Entities;
 using PatientRegistrySystem.DB.Seeds;
+using System.Linq;
 
 namespace PatientRegistrySystem.DB.Contexts
 {
@@ -25,10 +27,43 @@ namespace PatientRegistrySystem.DB.Contexts
 
         protected override async void OnModelCreating(ModelBuilder modelBuilder)
         {
-           #region FluintApi
+            #region FluintApi
             modelBuilder.Entity<ApplicationUser>()
                 .HasOne(a => a.User)
                 .WithOne(u => u.ApplicationUser);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<User>()
+               .Property(e => e.UserId)
+               .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Doctor>()
+                .Property(e => e.DoctorId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.EmployeeId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Record>()
+                .Property(e => e.RecordId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Prescription>()
+                .Property(e => e.PrescriptionId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Medicine>()
+                .Property(e => e.MedicineId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Company>()
+                .Property(e => e.CompanyId)
+                .ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Employee>()
                         .HasOne(e => e.User)
                         .WithMany(u => u.Employee).OnDelete(DeleteBehavior.NoAction);
@@ -48,6 +83,10 @@ namespace PatientRegistrySystem.DB.Contexts
             modelBuilder.Entity<User>()
                 .HasMany(e => e.Record)
                 .WithOne(e => e.User).OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>()
+                .HasOne(a => a.ApplicationUser)
+                .WithOne(a => a.User);
 
             #endregion
             modelBuilder.Seed();

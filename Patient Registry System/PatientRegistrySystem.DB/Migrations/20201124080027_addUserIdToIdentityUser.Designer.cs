@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PatientRegistrySystem.DB.Contexts;
 
 namespace PatientRegistrySystem.DB.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201124080027_addUserIdToIdentityUser")]
+    partial class addUserIdToIdentityUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,28 +51,28 @@ namespace PatientRegistrySystem.DB.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "e43f0f9e-5817-457d-a0d4-b3009d12ad69",
+                            ConcurrencyStamp = "5a71eb38-d88e-4940-8fbf-a6e889778c43",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
-                            ConcurrencyStamp = "3e3ab000-833c-40bb-8f4a-e5893422eee3",
+                            ConcurrencyStamp = "9b12eb40-3628-484b-be20-3b81ac91f067",
                             Name = "Doctor",
                             NormalizedName = "DOCTOR"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
-                            ConcurrencyStamp = "c3f76f6d-42da-4d93-a1ba-3bef282f9276",
+                            ConcurrencyStamp = "68ffb250-d46f-4781-8ba1-ca71049674c2",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7213",
-                            ConcurrencyStamp = "b3723e91-9825-4311-8ff0-d438eead6d32",
+                            ConcurrencyStamp = "fde04030-49fd-4c2c-afd2-41125ddc2d6c",
                             Name = "Patient",
                             NormalizedName = "PATIENT"
                         });
@@ -103,7 +105,6 @@ namespace PatientRegistrySystem.DB.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")

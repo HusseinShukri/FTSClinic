@@ -33,10 +33,10 @@ namespace PatientRegistrySystem.API.ViewModel.Registration
         [Display(Name = "First Adress")]
         [Required(ErrorMessage = "The first Adress is required")]
         [StringLength(50, ErrorMessage = "Max Length is {1}")]
-        public string Adress1 { get; set; }
+        public string Address1 { get; set; }
 
         [Display(Name = "Second Adress")]
         [StringLength(50, ErrorMessage = "Max Length is {1}")]
-        public string Adress2 { get; set; }
+        public string Address2 { get; set; }
     }
 }

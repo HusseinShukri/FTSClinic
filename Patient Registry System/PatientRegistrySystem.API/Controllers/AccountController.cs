@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PatientRegistrySystem.API.ControllersHelper;
 using PatientRegistrySystem.API.ViewModel.Login;
 using PatientRegistrySystem.API.ViewModel.Registration;
 using PatientRegistrySystem.DB.Entities;
-using System.Linq;
+using PatientRegistrySystem.Domain.Dto;
+using PatientRegistrySystem.Services;
 using System.Threading.Tasks;
 
 namespace PatientRegistrySystem.API.Controllers
@@ -18,16 +20,22 @@ namespace PatientRegistrySystem.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
+        private readonly IAdminServices _adminServices;
+        private readonly IPationtService _pationtService;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager
-            , IMapper mapper)
+            , IMapper mapper,
+            IAdminServices adminServices,
+            IPationtService pationtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _adminServices = adminServices;
+            _pationtService = pationtService;
         }
-       
+
         [Route("[action]")]
         [HttpPost]
         [AllowAnonymous]
@@ -55,17 +63,7 @@ namespace PatientRegistrySystem.API.Controllers
             }
             else
             {
-                string messages = "";
-                foreach (var modelState in ViewData.ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        messages+= string.Join("; ", ModelState.Values
-                                        .SelectMany(x => x.Errors)
-                                        .Select(x => x.ErrorMessage));
-                    }
-                }
-                return BadRequest(messages);
+                return BadRequest(ModelState.GetErrors());
             }
         }
 
@@ -76,7 +74,7 @@ namespace PatientRegistrySystem.API.Controllers
             await _signInManager.SignOutAsync();
             return Ok();
         }
-      
+
         [Route("[action]")]
         [HttpPost]
         [AllowAnonymous]
@@ -84,46 +82,29 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser applicationUser = new ApplicationUser()
+                ApplicationUserDto applicationUser = new ApplicationUserDto()
                 {
                     Email = model.Email,
                     UserName = model.Email,
                     PhoneNumber = model.Phone,
-                    User = _mapper.Map<User>(model)
+                    User = _mapper.Map<UserDto>(model)
                 };
-                
                 applicationUser.User.ApplicationUserId = applicationUser.Id;
-                applicationUser.User.ApplicationUser = applicationUser;
-              
-                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+                applicationUser.User.ApplicationUserDto = applicationUser;
+
+                var result = await _pationtService.CreateAdminAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(applicationUser, "Patient");
                     return Ok("Created");
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                        var b = result.Succeeded;
-                    }
-                    return BadRequest(ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList());
+                    return BadRequest(result.GetErrors());
                 }
             }
             else
             {
-                string messages = "";
-                foreach (var modelState in ViewData.ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        messages += string.Join("; ", ModelState.Values
-                                        .SelectMany(x => x.Errors)
-                                        .Select(x => x.ErrorMessage));
-                    }
-                }
-                return BadRequest(messages);
+                return BadRequest(ModelState.GetErrors());
             }
         }
 
@@ -135,46 +116,29 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser applicationUser = new ApplicationUser()
+                ApplicationUserDto applicationUser = new ApplicationUserDto()
                 {
                     Email = model.Email,
                     UserName = model.Email,
                     PhoneNumber = model.Phone,
-                    User = _mapper.Map<User>(model)
+                    User = _mapper.Map<UserDto>(model)
                 };
-
                 applicationUser.User.ApplicationUserId = applicationUser.Id;
-                applicationUser.User.ApplicationUser = applicationUser;
+                applicationUser.User.ApplicationUserDto = applicationUser;
 
-                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+                var result = await _adminServices.CreateAdminAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(applicationUser, "Admin");
                     return Ok("Created");
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                        var b = result.Succeeded;
-                    }
-                    return BadRequest(ModelState.SelectMany(x => x.Value.Errors).Select(x => x.ErrorMessage).ToList());
+                    return BadRequest(result.GetErrors());
                 }
             }
             else
             {
-                string messages = "";
-                foreach (var modelState in ViewData.ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        messages += string.Join("; ", ModelState.Values
-                                        .SelectMany(x => x.Errors)
-                                        .Select(x => x.ErrorMessage));
-                    }
-                }
-                return BadRequest(messages);
+                return BadRequest(ModelState.GetErrors());
             }
         }
     }

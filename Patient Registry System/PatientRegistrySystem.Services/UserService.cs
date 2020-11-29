@@ -18,21 +18,10 @@ namespace PatientRegistrySystem.Services
             _userRepository = userRepository;
         }
 
+
         public async Task<List<UserDto>> GetAllUsersAsync()
         {
             var userFromDB = await _userRepository.GetAllShallowAsync();
-            if (!userFromDB.Any()) { return null; }
-            return _mapper.Map<List<UserDto>>(userFromDB);
-        }
-        public async Task<List<UserDto>> GetAllDoctorssAsync()
-        {
-            var userFromDB = await _userRepository.GetAllDoctorsShallowAsync();
-            if (!userFromDB.Any()) { return null; }
-            return _mapper.Map<List<UserDto>>(userFromDB);
-        }
-        public async Task<List<UserDto>> GetAllEmployeesAsync()
-        {
-            var userFromDB = await _userRepository.GetAllEmployeesShallowAsync();
             if (!userFromDB.Any()) { return null; }
             return _mapper.Map<List<UserDto>>(userFromDB);
         }

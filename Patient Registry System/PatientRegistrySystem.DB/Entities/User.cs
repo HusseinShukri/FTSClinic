@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatientRegistrySystem.DB.Entities
 {
     public class User
     {
         [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         [Required]
         public bool IsDeleted { get; set; } = false;
@@ -19,6 +21,7 @@ namespace PatientRegistrySystem.DB.Entities
         [Required(ErrorMessage = "The Login is required")]
         public string Login { get; set; }
         [Required]
+        [ForeignKey(nameof(ApplicationUser))]
         public string ApplicationUserId { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; } = new ApplicationUser();

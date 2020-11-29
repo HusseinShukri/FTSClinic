@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PatientRegistrySystem.DB.Contexts;
 
 namespace PatientRegistrySystem.DB.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    partial class ApplicationIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201126045854_newUpdate")]
+    partial class newUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,28 +51,28 @@ namespace PatientRegistrySystem.DB.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "e43f0f9e-5817-457d-a0d4-b3009d12ad69",
+                            ConcurrencyStamp = "ba99fb68-4f02-4c09-82fa-3e746a6d0702",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
-                            ConcurrencyStamp = "3e3ab000-833c-40bb-8f4a-e5893422eee3",
+                            ConcurrencyStamp = "441fce78-509f-4e39-9302-79daace811de",
                             Name = "Doctor",
                             NormalizedName = "DOCTOR"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
-                            ConcurrencyStamp = "c3f76f6d-42da-4d93-a1ba-3bef282f9276",
+                            ConcurrencyStamp = "aff103ef-b48b-463a-8f0f-f9f52def10fd",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7213",
-                            ConcurrencyStamp = "b3723e91-9825-4311-8ff0-d438eead6d32",
+                            ConcurrencyStamp = "883d6b00-bfc0-44e0-9345-d72ca0cfaaf9",
                             Name = "Patient",
                             NormalizedName = "PATIENT"
                         });

@@ -2,7 +2,7 @@
 
 namespace PatientRegistrySystem.DB.Repos
 {
-    public interface IRecordRepository : IGenericRepository<Record>
+    public interface IRecordRepository : IGenericRepository<Record,Record>
     {
         
     }

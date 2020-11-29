@@ -35,6 +35,15 @@ namespace PatientRegistrySystem.API
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRecordRepository, RecordRepository>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
+            services.AddScoped<IDoctorService,DoctorService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IUserManagerRepository, UserManagerRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IAdminServices, AdminServices>();
+            services.AddScoped<IPationtRepository, PationtRepository>();
+            services.AddScoped<IPationtService, PationtService>();
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen(setupAction =>
@@ -70,12 +79,15 @@ namespace PatientRegistrySystem.API
                 .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem",
                 b => b.MigrationsAssembly("PatientRegistrySystem.DB"));
             });
+            
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddRoles<IdentityRole>()
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders()
-                .AddUserStore<ApplicationUserStore>();
+                .AddUserStore<ApplicationUserStore>()
+                .AddSignInManager<SignInManager<ApplicationUser>>()
+                .AddUserManager<UserManager<ApplicationUser>>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();

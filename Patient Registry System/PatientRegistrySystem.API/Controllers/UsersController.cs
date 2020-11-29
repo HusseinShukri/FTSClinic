@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PatientRegistrySystem.API.ViewModel;
+using PatientRegistrySystem.DB.Roles;
 using PatientRegistrySystem.Domain.Dto;
 using PatientRegistrySystem.Services;
 
@@ -10,7 +11,7 @@ namespace PatientRegistrySystem.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = UserRoles.Admin)]
     public class UsersController : Controller
     {
 

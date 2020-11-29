@@ -11,6 +11,8 @@
     <Compile Remove="Migrations\20201112014003_addSeed.Designer.cs" />
     <Compile Remove="Migrations\20201117232438_addAdminRecord.cs" />
     <Compile Remove="Migrations\20201117232438_addAdminRecord.Designer.cs" />
+    <Compile Remove="Migrations\20201124074610_addnavegation.cs" />
+    <Compile Remove="Migrations\20201124074610_addnavegation.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
