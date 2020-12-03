@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace PatientRegistrySystem.Domain.Dto
+﻿namespace PatientRegistrySystem.Domain.Dto
 {
     public class MedicineDto
     {
-        public String Name { get; set; }
-        public CompanyDto Company { get; set; }
+        public string Name { get; set; }
+        public CompanyDto CompanyDto { get; set; }
     }
 }

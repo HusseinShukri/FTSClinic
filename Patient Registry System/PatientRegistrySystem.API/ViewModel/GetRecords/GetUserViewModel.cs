@@ -4,6 +4,6 @@ namespace PatientRegistrySystem.API.ViewModel
 {
     public class GetUserViewModel
     {
-        public UserDto User { get; set; }
+        public ApplicationUserDto User { get; set; }
     }
 }

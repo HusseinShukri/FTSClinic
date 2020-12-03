@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using PatientRegistrySystem.API.ControllersHelper;
 using PatientRegistrySystem.API.ViewModel.Login;
 using PatientRegistrySystem.API.ViewModel.Registration;
-using PatientRegistrySystem.DB.Entities;
+using PatientRegistrySystem.DB.Models;
 using PatientRegistrySystem.Domain.Dto;
-using PatientRegistrySystem.Services;
+using PatientRegistrySystem.Services.AdminServices;
+using PatientRegistrySystem.Services.PatientServices;
 using System.Threading.Tasks;
 
 namespace PatientRegistrySystem.API.Controllers
@@ -20,14 +21,14 @@ namespace PatientRegistrySystem.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
-        private readonly IAdminServices _adminServices;
-        private readonly IPationtService _pationtService;
+        private readonly IAdminService _adminServices;
+        private readonly IPatientService _pationtService;
 
-        public AccountController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager
+        public AccountController(UserManager<ApplicationUser> userManager
+             ,SignInManager<ApplicationUser> signInManager
             , IMapper mapper,
-            IAdminServices adminServices,
-            IPationtService pationtService)
+            IAdminService adminServices,
+            IPatientService pationtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -82,17 +83,7 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUserDto applicationUser = new ApplicationUserDto()
-                {
-                    Email = model.Email,
-                    UserName = model.Email,
-                    PhoneNumber = model.Phone,
-                    User = _mapper.Map<UserDto>(model)
-                };
-                applicationUser.User.ApplicationUserId = applicationUser.Id;
-                applicationUser.User.ApplicationUserDto = applicationUser;
-
-                var result = await _pationtService.CreateAdminAsync(applicationUser, model.Password);
+                var result = await _pationtService.CreatePatientAsync(_mapper.Map<ApplicationUserDto>(model), model.Password);
                 if (result.Succeeded)
                 {
                     return Ok("Created");
@@ -116,17 +107,7 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUserDto applicationUser = new ApplicationUserDto()
-                {
-                    Email = model.Email,
-                    UserName = model.Email,
-                    PhoneNumber = model.Phone,
-                    User = _mapper.Map<UserDto>(model)
-                };
-                applicationUser.User.ApplicationUserId = applicationUser.Id;
-                applicationUser.User.ApplicationUserDto = applicationUser;
-
-                var result = await _adminServices.CreateAdminAsync(applicationUser, model.Password);
+                var result = await _adminServices.CreateAdminAsync(_mapper.Map<ApplicationUserDto>(model), model.Password);
                 if (result.Succeeded)
                 {
                     return Ok("Created");

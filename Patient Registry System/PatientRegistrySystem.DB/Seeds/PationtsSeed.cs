@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PatientRegistrySystem.DB.Entities;
+using PatientRegistrySystem.DB.Models;
 using System;
 
 namespace PatientRegistrySystem.DB.Seeds
@@ -10,69 +10,32 @@ namespace PatientRegistrySystem.DB.Seeds
         public static void Seed(this ModelBuilder modelBuilder)
         {
             #region Role
-            modelBuilder.Entity<IdentityRole>().HasData(
-            new IdentityRole
+            modelBuilder.Entity<ApplicationRole>().HasData(
+            new ApplicationRole
             {
-                Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
+                Id = 1,
                 Name = "Admin",
                 NormalizedName = "ADMIN".ToUpper()
             },
-             new IdentityRole
+             new ApplicationRole
              {
-                 Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
+                 Id = 2,
                  Name = "Doctor",
                  NormalizedName = "DOCTOR".ToUpper()
              },
-             new IdentityRole
+             new ApplicationRole
              {
-                 Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
+                 Id = 3,
                  Name = "Employee",
                  NormalizedName = "EMPLOYEE".ToUpper()
              },
-             new IdentityRole
+             new ApplicationRole
              {
-                 Id = "2c5e174e-3b0e-446f-86af-483d56fd7213",
+                 Id = 4,
                  Name = "Patient",
                  NormalizedName = "PATIENT".ToUpper()
              }
             );
-
-            //ApplicationUser applicationUser = new ApplicationUser()
-            //{
-            //    Id = "41e8cb36-0aa8-4f6a-ba9f-31c5c245c35e",
-            //    UserName = "Hassan@Qadmany.com",
-            //    NormalizedUserName = "HASSAN@QADMANY.COM",
-            //    Email = "Hassan@Qadmany.com",
-            //    NormalizedEmail = "HASSAN@QADMANY.COM",
-            //    EmailConfirmed = false,
-            //    PasswordHash = "AQAAAAEAACcQAAAAEJWroDI7TVOGvWwOoo2hM8Z0cYuUB5BYxFrHaSVJMzjhPwIeP5Yc8U0vRdAM2oZBnw==",
-            //    SecurityStamp = "QEWFJBBO2O2NF5BHAUZWEEXQTWCF4BTQ",
-            //    ConcurrencyStamp = "81420763-f5a3-4e40-80a6-bdfa6b85b5d2",
-            //    PhoneNumber = "1234",
-            //    PhoneNumberConfirmed = false,
-            //    TwoFactorEnabled = false,
-            //    LockoutEnd = null,
-            //    LockoutEnabled = true,
-            //    AccessFailedCount = 0,
-            //    User = new User
-            //    {
-            //        UserId = 1,
-            //        IsDeleted = false,
-            //        FirstName = "Hassan",
-            //        LastName = "Qadmany",
-            //        Login = "1234",
-            //    }
-            //};
-            //applicationUser.User.ApplicationUser = applicationUser;
-            //applicationUser.User.ApplicationUserId = applicationUser.Id;
-            //modelBuilder.Entity<ApplicationUser>().HasData(applicationUser);
-
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(
-            //    new IdentityUserRole<string>
-            //    {
-            //        RoleId = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-            //        UserId = "41e8cb36-0aa8-4f6a-ba9f-31c5c245c35e"
-            //    });
             #endregion
             #region Company
             modelBuilder.Entity<Company>().HasData(

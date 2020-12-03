@@ -1,4 +1,6 @@
-﻿namespace PatientRegistrySystem.Domain.Dto
+﻿using System.Collections.Generic;
+
+namespace PatientRegistrySystem.Domain.Dto
 {
    public class ApplicationUserDto
     {
@@ -15,6 +17,14 @@
         public string Id { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
-        public UserDto User { get; set; }
+
+        public bool IsDeleted { get; set; } 
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Login { get; set; }
+
+        public List<RecordDto> RecordDto { get; set; } = new List<RecordDto>();
+        public List<EmployeeDto> EmployeeDto { get; set; } = new List<EmployeeDto>();
+        public List<DoctorDto> DoctorDto { get; set; } = new List<DoctorDto>();
     }
 }

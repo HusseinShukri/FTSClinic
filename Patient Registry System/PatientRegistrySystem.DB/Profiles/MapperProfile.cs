@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using PatientRegistrySystem.DB.Entities;
+using PatientRegistrySystem.DB.Models;
 using PatientRegistrySystem.Domain.Dto;
 using PatientRegistrySystem.Domain.Dto.DtosForRecord;
+using System.Collections.Generic;
 
 namespace PatientRegistrySystem.DB.Profiles
 {
@@ -10,40 +11,33 @@ namespace PatientRegistrySystem.DB.Profiles
         public MapperProfile()
         {
             CreateMap<ApplicationUser, ApplicationUserDto>()
-                .ForMember(dir => dir.User, opt => opt.MapFrom(src => src.User))
-                //.ForMember(dir => dir.User.Doctor, opt => opt.MapFrom(src => src.User.Doctor))
-                //.ForMember(dir => dir.User.Employee, opt => opt.MapFrom(src => src.User.Employee))
-                .ReverseMap();
-
-            CreateMap<User, UserForRecoedDto>();
-
-            CreateMap<User, UserDto>()
-                .ForMember(dir => dir.ApplicationUserDto, opt => opt.MapFrom(src => src.ApplicationUser))
-                .ForMember(dir => dir.Employee, opt => opt.MapFrom(src => src.Employee))
-                .ForMember(dir => dir.Doctor, opt => opt.MapFrom(src => src.Doctor))
-                .ForMember(dir => dir.Record, opt => opt.MapFrom(src => src.Record))
+                .ForMember(dir => dir.DoctorDto, opt => opt.MapFrom((src, dir, opt, context) => context.Mapper.Map<List<DoctorDto>>(src.Doctor)))
+                .ForMember(dir => dir.EmployeeDto, opt => opt.MapFrom((src, dir, opt, context) => context.Mapper.Map<List<EmployeeDto>>(src.Employee)))
+                .ForMember(dir => dir.RecordDto, opt => opt.MapFrom((src, dir, opt, context) => context.Mapper.Map<List<RecordDto>>(src.Record)))
                 .ReverseMap()
-                .ForMember(dir => dir.ApplicationUser, opt => opt.Ignore())
-                .ForMember(dir => dir.Employee, opt => opt.Ignore())
-                .ForMember(dir => dir.Doctor, opt => opt.Ignore())
-                .ForMember(dir => dir.Record, opt => opt.Ignore());
-
-
-            CreateMap<Employee, EmployeeDto>()
-                .ForMember(dir => dir.Adress, opt => opt.MapFrom(src => src.Adress))
-                .ForMember(dir => dir.User, opt => opt.MapFrom(src => src.User))
-                .ForMember(dir => dir.Doctor, opt => opt.MapFrom(src => src.Doctor))
-                .ReverseMap();
-
-            CreateMap<Employee, EmployeeForRecordDto>();
+                .ForMember(dir => dir.Doctor, opt => opt.MapFrom((src, dir, opt, context) => context.Mapper.Map<List<Doctor>>(src.DoctorDto)))
+                .ForMember(dir => dir.Employee, opt => opt.MapFrom((src, dir, opt, context) => context.Mapper.Map<List<Employee>>(src.EmployeeDto)))
+                .ForMember(dir => dir.Record, opt => opt.MapFrom((src, dir, opt, context) => context.Mapper.Map<List<Record>>(src.RecordDto)));
 
             CreateMap<Doctor, DoctorDto>()
-                .ForMember(dir => dir.User, opt => opt.MapFrom(src => src.User))
+                .ForMember(dir => dir.ApplicationUserDto, opt => opt.MapFrom(src => src.ApplicationUser))
                 .ForMember(dir => dir.DoctorId, opt => opt.MapFrom(src => src.DoctorId))
                 .ForMember(dir => dir.Address1, opt => opt.MapFrom(src => src.Address1))
                 .ForMember(dir => dir.Address2, opt => opt.MapFrom(src => src.Address2))
                 .ReverseMap();
-            CreateMap<Doctor, DoctorForRecordDto>();
+
+            CreateMap<Employee, EmployeeDto>()
+                .ForMember(dir => dir.ApplicationUserDto, opt => opt.MapFrom(src => src.ApplicationUser))
+                .ForMember(dir => dir.DoctorDto, opt => opt.MapFrom(src => src.Doctor))
+                .ForMember(dir => dir.Adress, opt => opt.MapFrom(src => src.Adress))
+                .ReverseMap();
+
+            CreateMap<Record, RecordDto>()
+                .ForMember(dir => dir.PatinetName, opt => opt.MapFrom(src => $"{src.ApplicationUser.FirstName} {src.ApplicationUser.LastName}"))
+                .ForMember(dir => dir.DoctorNameDto, opt => opt.MapFrom(src => src.Doctor))
+                .ForMember(dir => dir.PrescriptionDto, opt => opt.MapFrom(src => src.Prescription))
+                .ForMember(dir => dir.ApprovedByDto, opt => opt.MapFrom(src => src.Employee))
+                .ReverseMap();
 
             CreateMap<Company, CompanyDto>()
                 .ForMember(dir => dir.Name, opt => opt.MapFrom(src => src.Name))
@@ -52,7 +46,7 @@ namespace PatientRegistrySystem.DB.Profiles
 
             CreateMap<Medicine, MedicineDto>()
                 .ForMember(dir => dir.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dir => dir.Company, opt => opt.MapFrom(src => src.Company))
+                .ForMember(dir => dir.CompanyDto, opt => opt.MapFrom(src => src.Company))
                 .ReverseMap();
 
             CreateMap<Prescription, PrescriptionDto>()
@@ -61,12 +55,9 @@ namespace PatientRegistrySystem.DB.Profiles
                 .ForMember(dir => dir.ExpiryDate, opt => opt.MapFrom(src => src.ExpiryDate))
                 .ReverseMap();
 
-            CreateMap<Record, RecordDto>()
-                .ForMember(dir => dir.PatinetName, opt => opt.MapFrom(src => $"{src.User.FirstName} {src.User.LastName}"))
-                .ForMember(dir => dir.DoctorName, opt => opt.MapFrom(src => src.Doctor))
-                .ForMember(dir => dir.Prescription, opt => opt.MapFrom(src => src.Prescription))
-                .ForMember(dir => dir.ApprovedBy, opt => opt.MapFrom(src => src.Employee))
-                .ReverseMap();
+            CreateMap<Employee, EmployeeForRecordDto>();
+
+            CreateMap<Doctor, DoctorForRecordDto>();
         }
     }
 }

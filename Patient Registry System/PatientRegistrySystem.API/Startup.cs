@@ -6,15 +6,22 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PatientRegistrySystem.DB.Contexts;
-using PatientRegistrySystem.Services;
-using PatientRegistrySystem.DB.Repos;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using PatientRegistrySystem.DB.Repos.AplicationUserRepository;
+using PatientRegistrySystem.DB.Repos.AdminRepository;
+using PatientRegistrySystem.DB.Repos.DoctorRepository;
+using PatientRegistrySystem.DB.Repos.EmployeeRepository;
+using PatientRegistrySystem.DB.Repos.PationrRepository;
+using PatientRegistrySystem.Services.PatientServices;
+using PatientRegistrySystem.Services.AdminServices;
+using System;
 using System.Reflection;
 using System.IO;
-using System;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using PatientRegistrySystem.DB.Models;
 using Microsoft.AspNetCore.Identity;
-using PatientRegistrySystem.DB.Entities;
+using PatientRegistrySystem.Services.DoctorServices;
+using PatientRegistrySystem.Services.EmployeeServices;
 
 namespace PatientRegistrySystem.API
 {
@@ -32,20 +39,21 @@ namespace PatientRegistrySystem.API
             services.AddControllersWithViews();
             services.AddControllers();
             services.AddProblemDetails();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRecordRepository, RecordRepository>();
-            services.AddScoped<IDoctorRepository, DoctorRepository>();
-            services.AddScoped<IDoctorService,DoctorService>();
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<IUserManagerRepository, UserManagerRepository>();
+            //rpos
+            services.AddScoped<IAplicationUserRepository, AplicationUserRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
-            services.AddScoped<IAdminServices, AdminServices>();
-            services.AddScoped<IPationtRepository, PationtRepository>();
-            services.AddScoped<IPationtService, PationtService>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            //services
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IPatientService, PatientService>();
+
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
             services.AddSwaggerGen(setupAction =>
             {
                 setupAction.SwaggerDoc("ClinicOpenAPISpecification",
@@ -68,9 +76,7 @@ namespace PatientRegistrySystem.API
             });
 
             services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly
-                , typeof(Profiles.MapperProfile).Assembly,
-                typeof(Domain.Profiles.MapperProfile).Assembly);
-
+                , typeof(Profiles.MapperProfile).Assembly);
 
             services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
@@ -79,15 +85,15 @@ namespace PatientRegistrySystem.API
                 .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem",
                 b => b.MigrationsAssembly("PatientRegistrySystem.DB"));
             });
-            
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddRoles<IdentityRole>()
-                .AddRoleManager<RoleManager<IdentityRole>>()
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
-                .AddDefaultTokenProviders()
-                .AddUserStore<ApplicationUserStore>()
-                .AddSignInManager<SignInManager<ApplicationUser>>()
-                .AddUserManager<UserManager<ApplicationUser>>();
+                .AddDefaultTokenProviders();
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(1);
+            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
