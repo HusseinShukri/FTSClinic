@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using PatientRegistrySystem.DB.Repos.PationrRepository;
+﻿using PatientRegistrySystem.DB.Models.DbModels;
+using PatientRegistrySystem.DB.Models.IdentityModels;
+using PatientRegistrySystem.DB.Repos.GenericRepository;
 using PatientRegistrySystem.Domain.Dto;
+using PatientRegistrySystem.Domain.Roles;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,46 +11,47 @@ namespace PatientRegistrySystem.Services.PatientServices
 {
     public class PatientService : IPatientService
     {
-        private readonly IPatientRepository _patientRepository;
+        private readonly IGenericRepository<ApplicationUser, ApplicationUserDto, ApplicationUserCreateModel> _genericRepository;
 
-        public PatientService(IPatientRepository patientRepository)
+        public PatientService(IGenericRepository<ApplicationUser, ApplicationUserDto, ApplicationUserCreateModel> genericRepository)
         {
-            _patientRepository = patientRepository;
+            _genericRepository = genericRepository;
         }
 
-        public async Task<IdentityResult> CreatePatientAsync(ApplicationUserDto applicationUser, string Password)
+        public async Task<bool> CreatePatientAsync(ApplicationUserCreateModel model)
         {
-            return await _patientRepository.CreatePatientAsync(applicationUser,Password);
+            model.UserRole = UserRoles.Patient;
+            return await _genericRepository.CreateEntityAsync(model);
         }
 
-        public async Task<IdentityResult> DeletePatientDeepAsync(ClaimsPrincipal claimsPrincipal)
+        public async Task<bool> DeletePatientDeepAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await _patientRepository.DeletePatientDeepAsync(await _patientRepository.FindPatientUserAsync(claimsPrincipal));
+            return await _genericRepository.DeleteEntityHardAsync(await _genericRepository.FindEntityClaimsAsync(claimsPrincipal));
         }
 
-        public async Task<IdentityResult> DeletePatientSoftAsync(ClaimsPrincipal claimsPrincipal)
+        public async Task<bool> DeletePatientSoftAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await _patientRepository.DeletePatientSoftAsync(await _patientRepository.FindPatientUserAsync(claimsPrincipal));
+            return await _genericRepository.DeleteEntitySoftAsync(await _genericRepository.FindEntityClaimsAsync(claimsPrincipal));
         }
 
         public async Task<ApplicationUserDto> FindPatientUserAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await _patientRepository.FindPatientUserAsync(claimsPrincipal);
+            return await _genericRepository.FindEntityClaimsAsync(claimsPrincipal);
         }
 
         public async Task<List<ApplicationUserDto>> GetAllPatientAsync()
         {
-            return await _patientRepository.GetAllPatientAsync();
+            return await _genericRepository.GetAllEntitiesAsync(true, UserRoles.Patient);
         }
 
         public async Task<ApplicationUserDto> GetPatientAsync(int userId)
         {
-            return await _patientRepository.GetPatientAsync(userId);
+            return await _genericRepository.GetEntityAsync(userId, true, UserRoles.Patient);
         }
 
-        public async Task<IdentityResult> UpdatePatientAsync(ApplicationUserDto applicationUser)
+        public async Task<bool> UpdatePatientAsync(ApplicationUserDto applicationUser)
         {
-            return await _patientRepository.UpdatePatientAsync(applicationUser);
+            return await _genericRepository.UpdateEntityAsync(applicationUser);
         }
     }
 }

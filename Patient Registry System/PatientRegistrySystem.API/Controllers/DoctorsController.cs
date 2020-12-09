@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PatientRegistrySystem.API.ControllersHelper;
 using PatientRegistrySystem.API.ViewModel;
 using PatientRegistrySystem.API.ViewModel.GetRecords;
 using PatientRegistrySystem.API.ViewModel.Registration;
-using PatientRegistrySystem.DB.Models;
+using PatientRegistrySystem.DB.Models.DbModels;
 using PatientRegistrySystem.Domain.Dto;
 using PatientRegistrySystem.Domain.Roles;
 using PatientRegistrySystem.Services.EmployeeServices;
@@ -22,7 +21,7 @@ namespace PatientRegistrySystem.API.Controllers
         private readonly IMapper _mapper;
         private readonly IEmployeeService _employeeService;
 
-        public DoctorsController(IMapper mapper,IEmployeeService employeeService)
+        public DoctorsController(IMapper mapper, IEmployeeService employeeService)
         {
             _mapper = mapper;
             _employeeService = employeeService;
@@ -34,14 +33,14 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _employeeService.CreateEmployeeAsync(_mapper.Map<ApplicationUserDto>(model), model.Password);
-                if (result.Result.Succeeded)
+                var result = await _employeeService.CreateEmployeeAsync(_mapper.Map<ApplicationUserCreateModel>(model));
+                if (result)
                 {
                     return Ok("Created");
                 }
                 else
                 {
-                    return BadRequest(result.Result.GetErrors());
+                    return BadRequest("Bad Inputs");
                 }
             }
             else
@@ -89,14 +88,13 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _employeeService.UpdateEmployeeAsync(applicationUserDto);
-                if (result.Succeeded)
+                if (await _employeeService.UpdateEmployeeAsync(applicationUserDto))
                 {
                     return Ok();
                 }
                 else
                 {
-                    return BadRequest(result.GetErrors());
+                    return BadRequest("Bad Inputs");
                 }
             }
             else
@@ -109,14 +107,13 @@ namespace PatientRegistrySystem.API.Controllers
         [HttpPut]
         public async Task<IActionResult> SoftDeleteEmployee()
         {
-            var result = await _employeeService.DeleteEmployeeSoftAsync(User);
-            if (result.Succeeded)
+            if (await _employeeService.DeleteEmployeeSoftAsync(User))
             {
                 return Ok();
             }
             else
             {
-                return BadRequest(result.GetErrors());
+                return BadRequest("Bad Inputs");
             }
         }
 

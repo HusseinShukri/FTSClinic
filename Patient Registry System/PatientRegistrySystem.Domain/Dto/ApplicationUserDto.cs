@@ -2,7 +2,7 @@
 
 namespace PatientRegistrySystem.Domain.Dto
 {
-   public class ApplicationUserDto
+   public class ApplicationUserDto : IDomainModel
     {
         public bool TwoFactorEnabled { get; set; }
         public bool PhoneNumberConfirmed { get; set; }

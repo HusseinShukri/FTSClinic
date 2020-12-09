@@ -1,27 +1,25 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using PatientRegistrySystem.DB.Contexts;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using PatientRegistrySystem.DB.Repos.AplicationUserRepository;
-using PatientRegistrySystem.DB.Repos.AdminRepository;
-using PatientRegistrySystem.DB.Repos.DoctorRepository;
-using PatientRegistrySystem.DB.Repos.EmployeeRepository;
-using PatientRegistrySystem.DB.Repos.PationrRepository;
-using PatientRegistrySystem.Services.PatientServices;
-using PatientRegistrySystem.Services.AdminServices;
-using System;
-using System.Reflection;
-using System.IO;
-using PatientRegistrySystem.DB.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PatientRegistrySystem.DB.Contexts;
+using PatientRegistrySystem.DB.Models.IdentityModels;
+using PatientRegistrySystem.DB.Repos.AplicationUserRepository;
+using PatientRegistrySystem.DB.Repos.DbGenericRepository;
+using PatientRegistrySystem.DB.Repos.GenericRepository;
+using PatientRegistrySystem.Services.AdminServices;
 using PatientRegistrySystem.Services.DoctorServices;
 using PatientRegistrySystem.Services.EmployeeServices;
+using PatientRegistrySystem.Services.PatientServices;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace PatientRegistrySystem.API
 {
@@ -41,10 +39,8 @@ namespace PatientRegistrySystem.API
             services.AddProblemDetails();
             //rpos
             services.AddScoped<IAplicationUserRepository, AplicationUserRepository>();
-            services.AddScoped<IAdminRepository, AdminRepository>();
-            services.AddScoped<IDoctorRepository, DoctorRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped(typeof(IGenericRepository<,,>), typeof(GenericRepository<,,>));
+            services.AddScoped(typeof(IDbGeneric<,>), typeof(DbGeneric<,>));
             //services
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IDoctorService, DoctorService>();

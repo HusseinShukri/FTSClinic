@@ -5,6 +5,7 @@ using PatientRegistrySystem.API.ControllersHelper;
 using PatientRegistrySystem.API.ViewModel;
 using PatientRegistrySystem.API.ViewModel.GetRecords;
 using PatientRegistrySystem.API.ViewModel.Registration;
+using PatientRegistrySystem.DB.Models.DbModels;
 using PatientRegistrySystem.Domain.Dto;
 using PatientRegistrySystem.Domain.Roles;
 using PatientRegistrySystem.Services.DoctorServices;
@@ -33,14 +34,13 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _doctorService.CreateDoctorAsync(_mapper.Map<ApplicationUserDto>(model), model.Password);
-                if (result.Result.Succeeded)
+                if (await _doctorService.CreateDoctorAsync(_mapper.Map<ApplicationUserCreateModel>(model)))
                 {
                     return Ok("Created");
                 }
                 else
                 {
-                    return BadRequest(result.Result.GetErrors());
+                    return BadRequest("Bad Inputs");
                 }
             }
             else
@@ -88,14 +88,13 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _doctorService.UpdateDoctorAsync(applicationUserDto);
-                if (result.Succeeded)
+                if (await _doctorService.UpdateDoctorAsync(applicationUserDto))
                 {
                     return Ok();
                 }
                 else
                 {
-                    return BadRequest(result.GetErrors());
+                    return BadRequest("Bad Inputs");
                 }
             }
             else
@@ -108,14 +107,13 @@ namespace PatientRegistrySystem.API.Controllers
         [HttpPut]
         public async Task<IActionResult> SoftDeleteDoctor()
         {
-            var result = await _doctorService.DeleteDoctorSoftAsync(User);
-            if (result.Succeeded)
+            if (await _doctorService.DeleteDoctorSoftAsync(User))
             {
                 return Ok();
             }
             else
             {
-                return BadRequest(result.GetErrors());
+                return BadRequest("Bad Inputs");
             }
         }
     }

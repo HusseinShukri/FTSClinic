@@ -1,10 +1,12 @@
-﻿using System;
+﻿using PatientRegistrySystem.DB.Models.DbModels;
+using PatientRegistrySystem.DB.Models.IdentityModels;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PatientRegistrySystem.DB.Models
 {
-    public class Record
+    public class Record : IDbModel
     {
         [Key]
         public int RecordId { get; set; }

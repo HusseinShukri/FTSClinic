@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using PatientRegistrySystem.DB.Models.DbModels;
 using PatientRegistrySystem.Domain.Dto;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -11,9 +11,9 @@ namespace PatientRegistrySystem.Services.DoctorServices
         Task<List<ApplicationUserDto>> GetAllDoctorAsync();
         Task<ApplicationUserDto> GetDoctorAsync(int userId);
         Task<ApplicationUserDto> FindDoctorUserAsync(ClaimsPrincipal claimsPrincipal);
-        Task<IdentityResult> CreateDoctorAsync(ApplicationUserDto applicationUser, string Password);
-        Task<IdentityResult> UpdateDoctorAsync(ApplicationUserDto applicationUser);
-        Task<IdentityResult> DeleteDoctorSoftAsync(ClaimsPrincipal claimsPrincipal);
-        Task<IdentityResult> DeleteDoctorDeepAsync(ClaimsPrincipal claimsPrincipal);
+        Task<bool> CreateDoctorAsync(ApplicationUserCreateModel model);
+        Task<bool> UpdateDoctorAsync(ApplicationUserDto applicationUser);
+        Task<bool> DeleteDoctorSoftAsync(ClaimsPrincipal claimsPrincipal);
+        Task<bool> DeleteDoctorDeepAsync(ClaimsPrincipal claimsPrincipal);
     }
 }

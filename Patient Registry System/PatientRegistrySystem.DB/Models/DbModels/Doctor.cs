@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using PatientRegistrySystem.DB.Models.IdentityModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PatientRegistrySystem.DB.Models
+namespace PatientRegistrySystem.DB.Models.DbModels
 {
-    public class Doctor
+    public class Doctor : IDbModel
     {
         [Key]
         public int DoctorId { get; set; }

@@ -2,7 +2,7 @@
 
 namespace PatientRegistrySystem.Domain.Dto
 {
-    public class DoctorDto
+    public class DoctorDto : IDomainModel
     {
         public int DoctorId { get; set; }
 

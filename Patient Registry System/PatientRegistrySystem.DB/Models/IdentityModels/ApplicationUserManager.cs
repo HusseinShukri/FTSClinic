@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 
-namespace PatientRegistrySystem.DB.Models
+namespace PatientRegistrySystem.DB.Models.IdentityModels
 {
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {

@@ -2,7 +2,7 @@
 
 namespace PatientRegistrySystem.Domain.Dto
 {
-    public class EmployeeDto
+    public class EmployeeDto : IDomainModel
     {
         [Display(Name ="Clinic work for Adress")]
         public string Adress { get; set; }

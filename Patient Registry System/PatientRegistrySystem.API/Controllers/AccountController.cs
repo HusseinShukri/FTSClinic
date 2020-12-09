@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using PatientRegistrySystem.API.ControllersHelper;
 using PatientRegistrySystem.API.ViewModel.Login;
 using PatientRegistrySystem.API.ViewModel.Registration;
-using PatientRegistrySystem.DB.Models;
-using PatientRegistrySystem.Domain.Dto;
+using PatientRegistrySystem.DB.Models.DbModels;
+using PatientRegistrySystem.DB.Models.IdentityModels;
 using PatientRegistrySystem.Services.AdminServices;
 using PatientRegistrySystem.Services.PatientServices;
 using System.Threading.Tasks;
@@ -83,14 +83,14 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _pationtService.CreatePatientAsync(_mapper.Map<ApplicationUserDto>(model), model.Password);
-                if (result.Succeeded)
+                var result = await _pationtService.CreatePatientAsync(_mapper.Map<ApplicationUserCreateModel>(model));
+                if (result)
                 {
                     return Ok("Created");
                 }
                 else
                 {
-                    return BadRequest(result.GetErrors());
+                    return BadRequest("Bad Inputs");
                 }
             }
             else
@@ -107,14 +107,14 @@ namespace PatientRegistrySystem.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _adminServices.CreateAdminAsync(_mapper.Map<ApplicationUserDto>(model), model.Password);
-                if (result.Succeeded)
+                var result = await _adminServices.CreateAdminAsync(_mapper.Map<ApplicationUserCreateModel>(model));
+                if (result)
                 {
                     return Ok("Created");
                 }
                 else
                 {
-                    return BadRequest(result.GetErrors());
+                    return BadRequest("Bad Inputs");
                 }
             }
             else

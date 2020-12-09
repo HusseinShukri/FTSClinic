@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.Domain.Dto
 {
-    public class RecordDto
+    public class RecordDto : IDomainModel
     {
         [Display(Name = "Patinet name")]
         public string PatinetName { get; set; }

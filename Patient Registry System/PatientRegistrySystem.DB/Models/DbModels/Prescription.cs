@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PatientRegistrySystem.DB.Models.DbModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.DB.Models
 {
-    public class Prescription
+    public class Prescription : IDbModel
     {
         [Key]
         public int PrescriptionId { get; set; }

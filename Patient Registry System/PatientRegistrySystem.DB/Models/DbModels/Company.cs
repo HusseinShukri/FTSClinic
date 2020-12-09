@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PatientRegistrySystem.DB.Models
+namespace PatientRegistrySystem.DB.Models.DbModels
 {
-    public class Company
+    public class Company : IDbModel
     {
         [Key]
         public int CompanyId { get; set; }

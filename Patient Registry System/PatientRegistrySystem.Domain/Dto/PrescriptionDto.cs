@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PatientRegistrySystem.Domain.Dto
 {
-    public class PrescriptionDto
+    public class PrescriptionDto : IDomainModel
     {
         public string LabTest { get; set; }
         public List<MedicineDto> MedicinesDto { get; set; }

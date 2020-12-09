@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using PatientRegistrySystem.DB.Repos.AdminRepository;
+﻿using PatientRegistrySystem.DB.Models.DbModels;
+using PatientRegistrySystem.DB.Models.IdentityModels;
+using PatientRegistrySystem.DB.Repos.GenericRepository;
 using PatientRegistrySystem.Domain.Dto;
+using PatientRegistrySystem.Domain.Roles;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,46 +11,47 @@ namespace PatientRegistrySystem.Services.AdminServices
 {
     public class AdminService : IAdminService
     {
-        private readonly IAdminRepository _adminRepository;
+        private readonly IGenericRepository<ApplicationUser, ApplicationUserDto, ApplicationUserCreateModel> _genericRepository;
 
-        public AdminService(IAdminRepository adminRepository)
+        public AdminService(IGenericRepository<ApplicationUser, ApplicationUserDto, ApplicationUserCreateModel> genericRepository)
         {
-            _adminRepository = adminRepository;
+            _genericRepository = genericRepository;
         }
 
-        public async Task<IdentityResult> CreateAdminAsync(ApplicationUserDto applicationUser, string Password)
+        public async Task<bool> CreateAdminAsync(ApplicationUserCreateModel model)
         {
-            return await _adminRepository.CreateAdminAsync(applicationUser, Password);
+            model.UserRole = UserRoles.Admin;
+            return await _genericRepository.CreateEntityAsync(model);
         }
 
-        public async Task<IdentityResult> DeleteAdminDeepAsync(ClaimsPrincipal claimsPrincipal)
+        public async Task<bool> DeleteAdminDeepAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await _adminRepository.DeleteAdminDeepAsync(await _adminRepository.FindAdminUserAsync(claimsPrincipal));
+            return await _genericRepository.DeleteEntityHardAsync(await _genericRepository.FindEntityClaimsAsync(claimsPrincipal));
         }
 
-        public async Task<IdentityResult> DeleteAdminSoftAsync(ClaimsPrincipal claimsPrincipal)
+        public async Task<bool> DeleteAdminSoftAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await _adminRepository.DeleteAdminSoftAsync(await _adminRepository.FindAdminUserAsync(claimsPrincipal));
+            return await _genericRepository.DeleteEntitySoftAsync(await _genericRepository.FindEntityClaimsAsync(claimsPrincipal));
         }
 
         public async Task<ApplicationUserDto> FindAdminUserAsync(ClaimsPrincipal claimsPrincipal)
         {
-            return await _adminRepository.FindAdminUserAsync(claimsPrincipal);
-        }
-
-        public async Task<ApplicationUserDto> GetAdminAsync(int userId)
-        {
-            return await _adminRepository.GetAdminAsync(userId);
+            return await _genericRepository.FindEntityClaimsAsync(claimsPrincipal);
         }
 
         public async Task<List<ApplicationUserDto>> GetAllAdminAsync()
         {
-            return await _adminRepository.GetAllAdminAsync();
+            return await _genericRepository.GetAllEntitiesAsync(true, UserRoles.Admin);
         }
 
-        public async Task<IdentityResult> UpdateAdminAsync(ApplicationUserDto applicationUser)
+        public async Task<ApplicationUserDto> GetAdminAsync(int userId)
         {
-            return await _adminRepository.UpdateAdminAsync(applicationUser);
+            return await _genericRepository.GetEntityAsync(userId, true, UserRoles.Admin);
+        }
+
+        public async Task<bool> UpdateAdminAsync(ApplicationUserDto applicationUser)
+        {
+            return await _genericRepository.UpdateEntityAsync(applicationUser);
         }
     }
 }

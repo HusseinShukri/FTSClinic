@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PatientRegistrySystem.DB.Models;
+using PatientRegistrySystem.DB.Models.DbModels;
+using PatientRegistrySystem.DB.Models.IdentityModels;
 using PatientRegistrySystem.DB.Seeds;
 
 namespace PatientRegistrySystem.DB.Contexts
@@ -22,59 +24,70 @@ namespace PatientRegistrySystem.DB.Contexts
         public DbSet<Record> Record { get; set; }
 
 
-        protected override async void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            #region FluintApi
-
-            modelBuilder.Entity<ApplicationUser>()
-                .Property(e => e.Id)
+            modelBuilder.Entity<ApplicationUser>(b =>
+            {
+                b.Property(e => e.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Doctor>()
-                .Property(e => e.DoctorId)
+                b.HasMany(e => e.Record)
+                .WithOne(e => e.ApplicationUser).OnDelete(DeleteBehavior.NoAction);
+
+                b.HasMany(e => e.Employee)
+                .WithOne(e => e.ApplicationUser).OnDelete(DeleteBehavior.NoAction);
+
+                b.HasMany(e => e.UserRoles)
+                    .WithOne()
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<Doctor>(b =>
+            {
+                b.Property(e => e.DoctorId)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Employee>()
-                .Property(e => e.EmployeeId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Record>()
-                .Property(e => e.RecordId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Prescription>()
-                .Property(e => e.PrescriptionId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Medicine>()
-                .Property(e => e.MedicineId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Company>()
-                .Property(e => e.CompanyId)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<Employee>()
-                        .HasOne(e => e.ApplicationUser)
-                        .WithMany(u => u.Employee).OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Doctor>()
-                .HasMany(a => a.Record)
+                b.HasMany(a => a.Record)
                 .WithOne(u => u.Doctor).OnDelete(DeleteBehavior.NoAction);
+            });
 
-            modelBuilder.Entity<Prescription>()
-                .HasMany(a => a.Record)
+            modelBuilder.Entity<Employee>(b =>
+            {
+                b.Property(e => e.EmployeeId)
+                .ValueGeneratedOnAdd();
+
+                b.HasOne(e => e.ApplicationUser)
+                .WithMany(u => u.Employee).OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Record>(b =>
+            {
+                b.Property(e => e.RecordId)
+                .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Prescription>(b =>
+            {
+                b.Property(e => e.PrescriptionId)
+                .ValueGeneratedOnAdd();
+
+                b.HasMany(a => a.Record)
                 .WithOne(p => p.Prescription).OnDelete(DeleteBehavior.NoAction);
+            });
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Employee)
-                .WithOne(e => e.ApplicationUser).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Medicine>(b =>
+            {
+                b.Property(e => e.MedicineId)
+                .ValueGeneratedOnAdd();
+            });
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Record)
-                .WithOne(e => e.ApplicationUser).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Company>(b =>
+            {
+                b.Property(e => e.CompanyId)
+                .ValueGeneratedOnAdd();
+            });
 
-            #endregion
             modelBuilder.Seed();
             base.OnModelCreating(modelBuilder);
         }

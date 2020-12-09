@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
+using PatientRegistrySystem.DB.Models.IdentityModels;
 
-namespace PatientRegistrySystem.DB.Models
+namespace PatientRegistrySystem.DB.Models.DbModels
 {
-    public class Employee
+    public class Employee : IDbModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

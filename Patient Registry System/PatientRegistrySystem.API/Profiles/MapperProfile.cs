@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PatientRegistrySystem.API.ViewModel.Registration;
+using PatientRegistrySystem.DB.Models.DbModels;
 using PatientRegistrySystem.Domain.Dto;
 using System.Collections.Generic;
 
@@ -36,6 +37,21 @@ namespace PatientRegistrySystem.API.Profiles
                 .ForMember(dir => dir.Address2, opt => opt.MapFrom(src => src.Address2))
                 .ForMember(dir => dir.DoctorId, opt => opt.Ignore())
                 .ForMember(dir => dir.ApplicationUserDto, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<RegistrationViewModel, ApplicationUserCreateModel>()
+                .ForMember(dir=>dir.ApplicationUser,opt=>opt.MapFrom((src, dest, destMember, context)=>context.Mapper.Map<ApplicationUserDto>(src)))
+                .ForMember(dir => dir.Password, opt => opt.MapFrom(src => src.Password))
+                .ReverseMap();
+
+            CreateMap<RegistrationDoctoreViewModel, ApplicationUserCreateModel>()
+                .ForMember(dir => dir.ApplicationUser, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<ApplicationUserDto>(src)))
+                .ForMember(dir => dir.Password, opt => opt.MapFrom(src => src.Password))
+                .ReverseMap();
+
+            CreateMap<RegistrationEmployeeViewModel, ApplicationUserCreateModel>()
+                .ForMember(dir => dir.ApplicationUser, opt => opt.MapFrom((src, dest, destMember, context) => context.Mapper.Map<ApplicationUserDto>(src)))
+                .ForMember(dir => dir.Password, opt => opt.MapFrom(src => src.Password))
                 .ReverseMap();
         }
     }

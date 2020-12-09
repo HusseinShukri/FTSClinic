@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using PatientRegistrySystem.DB.Models;
+using PatientRegistrySystem.DB.Models.DbModels;
 using PatientRegistrySystem.Domain.Dto;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -9,13 +9,21 @@ namespace PatientRegistrySystem.DB.Repos.AplicationUserRepository
 {
     public interface IAplicationUserRepository
     {
-        Task<List<ApplicationUserDto>> GetAllApplicationUsersAsync(string userRoles);
-        Task<ApplicationUserDto> GetApplicationUserAsync(int userId, string userRoles);
+        Task<List<ApplicationUserDto>> GetAllApplicationUsersAsync(string userRoles, bool active = true);
+        Task<ApplicationUserDto> GetApplicationUserAsync(int userId, string userRoles, bool active = true);
+
         Task<ApplicationUserDto> FindApplicationUserAsync(ClaimsPrincipal claimsPrincipal);
-        Task<IdentityResult> CreateApplicationUserAsync(ApplicationUser applicationUser, string Password);
-        Task<IdentityResult> AddToRoleToApplicationUserAsync(ApplicationUser applicationUser, string userRoles);
-        Task<IdentityResult> UpdateApplicationUserAsync(ApplicationUser applicationUser);
-        Task<IdentityResult> DeleteApplicationUserSoftAsync(ApplicationUser applicationUser);
-        Task<IdentityResult> DeleteApplicationUserDeepAsync(ApplicationUser applicationUser);
+        Task<ApplicationUserDto> FindApplicationUserAsync(int entityId, bool active = true);
+        Task<List<ApplicationUserDto>> FindAllApplicationUserAsync(List<int> entityId, bool active = true);
+        Task<ApplicationUserDto> FindApplicationUserByEmailAsync(string email);
+
+        Task<IdentityResult> CreateApplicationUserAsync(ApplicationUserCreateModel model);
+        Task<List<IdentityResult>> CreateRangeApplicationUserAsync(List<ApplicationUserCreateModel> models);
+
+        Task<IdentityResult> AddToRoleToApplicationUserAsync(ApplicationUserDto applicationUser, string userRoles);
+        Task<IdentityResult> UpdateApplicationUserAsync(ApplicationUserDto applicationUser);
+
+        Task<IdentityResult> DeleteApplicationUserSoftAsync(ApplicationUserDto applicationUser);
+        Task<IdentityResult> DeleteApplicationUserDeepAsync(ApplicationUserDto applicationUser);
     }
 }
