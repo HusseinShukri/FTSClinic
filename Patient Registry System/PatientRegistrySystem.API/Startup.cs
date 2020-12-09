@@ -1,17 +1,25 @@
 using AutoMapper;
+using Hellang.Middleware.ProblemDetails;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PatientRegistrySystem.DB.Contexts;
-using PatientRegistrySystem.Services;
-using PatientRegistrySystem.DB.Repos;
-using Hellang.Middleware.ProblemDetails;
-using System.Reflection;
-using System.IO;
+using PatientRegistrySystem.DB.Models.IdentityModels;
+using PatientRegistrySystem.DB.Repos.AplicationUserRepository;
+using PatientRegistrySystem.DB.Repos.DbGenericRepository;
+using PatientRegistrySystem.DB.Repos.GenericRepository;
+using PatientRegistrySystem.Services.AdminServices;
+using PatientRegistrySystem.Services.DoctorServices;
+using PatientRegistrySystem.Services.EmployeeServices;
+using PatientRegistrySystem.Services.PatientServices;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace PatientRegistrySystem.API
 {
@@ -29,11 +37,19 @@ namespace PatientRegistrySystem.API
             services.AddControllersWithViews();
             services.AddControllers();
             services.AddProblemDetails();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRecordRepository, RecordRepository>();
+            //rpos
+            services.AddScoped<IAplicationUserRepository, AplicationUserRepository>();
+            services.AddScoped(typeof(IGenericRepository<,,>), typeof(GenericRepository<,,>));
+            services.AddScoped(typeof(IDbGeneric<,>), typeof(DbGeneric<,>));
+            //services
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IPatientService, PatientService>();
+
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
             services.AddSwaggerGen(setupAction =>
             {
                 setupAction.SwaggerDoc("ClinicOpenAPISpecification",
@@ -55,13 +71,28 @@ namespace PatientRegistrySystem.API
 
             });
 
-            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly, typeof(API.Profiles.MapperProfile).Assembly);
-            services.AddDbContext<PatientContext>(options =>
+            services.AddAutoMapper(typeof(DB.Profiles.MapperProfile).Assembly
+                , typeof(Profiles.MapperProfile).Assembly);
+
+            services.AddDbContext<ApplicationIdentityDbContext>(options =>
             {
                 options
                 .EnableSensitiveDataLogging()
-                .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem");
+                .UseSqlServer("Data Source=DESKTOP-0CVKC97;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False; Initial Catalog = PatientRegistrySystem",
+                b => b.MigrationsAssembly("PatientRegistrySystem.DB"));
             });
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(1);
+            });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -85,6 +116,7 @@ namespace PatientRegistrySystem.API
             });
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

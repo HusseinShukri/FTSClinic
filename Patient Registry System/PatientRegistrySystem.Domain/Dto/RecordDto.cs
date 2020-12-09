@@ -1,19 +1,20 @@
 ﻿using PatientRegistrySystem.Domain.Dto.DtosForRecord;
+using PatientRegistrySystem.Domain.Status;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace PatientRegistrySystem.Domain.Dto
 {
-    public class RecordDto
+    public class RecordDto : IDomainModel
     {
         [Display(Name = "Patinet name")]
         public string PatinetName { get; set; }
 
         [Display(Name = "Doctor")]
-        public DoctorForRecordDto DoctorName { get; set; }
+        public DoctorForRecordDto DoctorNameDto { get; set; }
 
         [Display(Name = "Presciption")]
-        public PrescriptionDto Prescription { get; set; }
+        public PrescriptionDto PrescriptionDto { get; set; }
 
         [Display(Name = "From Date")]
         public DateTime StartDate { get; set; }
@@ -28,9 +29,9 @@ namespace PatientRegistrySystem.Domain.Dto
         public string ExtrInfo { get; set; }
 
         [Display(Name = "Current Status")]
-        public int Status { get; set; }
+        public RecordStatus Status { get; set; }
 
         [Display(Name = "Approved By Emolyee")]
-        public EmployeeForRecordDto ApprovedBy { get; set; }
+        public EmployeeForRecordDto ApprovedByDto { get; set; }
     }
 }
